@@ -46,7 +46,8 @@ class Signal:
 
     # --------------------------------------------------------
     def get_data_points(self):
+        # Can change this to return the needed data points type
         if self.signal_type == Signal.COMPOSED:
             return np.sum([component.get_data_points(self.linspace) for component in self.frequency_components], axis=0).tolist()
-
-        return self.data_points
+        else:
+            return self.data_points

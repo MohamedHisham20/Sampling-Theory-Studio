@@ -74,16 +74,14 @@ class Signal:
             noise_power = signal_power / (10 ** (self.SNR / 10))
             noise = np.random.normal(0, np.sqrt(noise_power), len(data_points))
             data_points += noise
-
+        self.data_points = data_points
         return data_points
 
     def get_maximum_frequency(self):
         return max([component.frequency for component in self.frequency_components], default=0)
 
     def get_samples(self, sampling_frequency, with_noise=True):
-        data_points = self.get_data_points(with_noise=with_noise)
-
         sampling_period = 1 / sampling_frequency
         sampling_linspace = np.arange(0, 2, sampling_period)
 
-        return np.interp(sampling_linspace, self.linspace, data_points)
+        return np.interp(sampling_linspace, self.linspace, self.data_points)

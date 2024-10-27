@@ -1,8 +1,8 @@
 import sys
 import numpy as np
 import pyqtgraph as pg
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QComboBox, QPushButton
-from PyQt5.QtCore import Qt
+from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QComboBox, QPushButton
+from PySide6.QtCore import Qt
 from scipy.interpolate import interp1d, lagrange, CubicSpline
 
 

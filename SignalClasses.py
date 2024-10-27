@@ -26,7 +26,9 @@ class Signal:
         self.data_points = np.array([])
         self.frequency_components = []
         self.signal_type = Signal.COMPOSED
-        self.linspace = np.linspace(0, 5, 10_000)
+        self.linspace_start = 0
+        self.linspace_stop = 2
+        self.linspace = np.linspace(self.linspace_start, self.linspace_stop, 10_000)
         self.SNR = Signal.MAXIMUM_SNR
         self.maximum_frequency = 0
 
@@ -72,8 +74,14 @@ class Signal:
             noise_power = signal_power / (10 ** (self.SNR / 10))
             noise = np.random.normal(0, np.sqrt(noise_power), len(data_points))
             data_points += noise
-
+        self.data_points = data_points
         return data_points
 
     def get_maximum_frequency(self):
         return max([component.frequency for component in self.frequency_components], default=0)
+
+    def get_samples(self, sampling_frequency, with_noise=True):
+        sampling_period = 1 / sampling_frequency
+        sampling_linspace = np.arange(0, 2, sampling_period)
+
+        return np.interp(sampling_linspace, self.linspace, self.data_points)

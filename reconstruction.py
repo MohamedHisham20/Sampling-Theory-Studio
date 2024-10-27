@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QComboBo
 from PyQt5.QtCore import Qt
 from scipy.interpolate import interp1d, lagrange, CubicSpline
 
+
 class Reconstruction(QWidget):
     def __init__(self):
         super(Reconstruction, self).__init__()
@@ -19,12 +20,15 @@ class Reconstruction(QWidget):
         layout.addWidget(self.plot_widget)
 
         # Generate sample data
-        self.sample_times = np.linspace(0, 10, 10)
+        self.sample_times = np.linspace(0, 9, 10)
+        print("sample times: ", self.sample_times)
         self.samples = np.sin(self.sample_times)
-        self.t = np.linspace(0, 10, 100)
+        self.t = np.linspace(0, 9.9, 100)
+        print("t values: ", self.t)
 
         # Initial plot of sample data points only without lines in between
-        self.plot_widget.plot(self.sample_times, self.samples, pen=None, symbol='o', symbolBrush='r', name="Original Samples")
+        self.plot_widget.plot(self.sample_times, self.samples, pen=None, symbol='o', symbolBrush='r',
+                              name="Original Samples")
 
         # Label for selection
         self.label = QLabel("Select a reconstruction technique:")
@@ -56,7 +60,8 @@ class Reconstruction(QWidget):
         self.plot_widget.clear()
 
         # Re-plot original samples
-        self.plot_widget.plot(self.sample_times, self.samples, pen=None, symbol='o', symbolBrush='r', name="Original Samples")
+        self.plot_widget.plot(self.sample_times, self.samples, pen=None, symbol='o', symbolBrush='r',
+                              name="Original Samples")
 
         # Get selected reconstruction technique
         technique = self.combo.currentText()
@@ -70,13 +75,13 @@ class Reconstruction(QWidget):
             elif technique == "Sinc interpolation":
                 reconstructed = self.sinc_interpolation(self.sample_times, self.samples, self.t)
             elif technique == "Nyquist interpolation":
-                reconstructed = self.nyquist_interpolation(self.samples, self.sample_times, self.t)
+                reconstructed = self.nyquist_interpolation(self.samples, self.sample_times, t=self.t)
             elif technique == "Polynomial interpolation":
                 reconstructed = self.polynomial_interpolation(self.sample_times, self.samples, self.t)
             elif technique == "Cubic spline interpolation":
                 reconstructed = self.spline_interpolation(self.sample_times, self.samples, self.t)
             elif technique == "Fourier series interpolation":
-                reconstructed = self.fourier_series_interpolation(self.samples, 5, self.t, T=10)
+                reconstructed = self.fourier_series_interpolation(self.samples, 10, self.t, T=10)
             elif technique == "Nearest neighbor interpolation":
                 reconstructed = self.nearest_neighbor_interpolation(self.sample_times, self.samples, self.t)
 
@@ -101,7 +106,7 @@ class Reconstruction(QWidget):
 
     def sinc(self, x):
         """Compute the sinc function."""
-        return np.sinc(x / np.pi)  # np.sinc() uses normalized sinc
+        return np.where(x == 0, 1.0, np.sin(np.pi * x) / (np.pi * x))
 
     def nyquist_interpolation(self, samples, sample_times, t):
         """Reconstruct the signal using Nyquist interpolation (sinc function)."""
@@ -110,6 +115,18 @@ class Reconstruction(QWidget):
             # Calculate the contribution of each sample using the sinc function
             reconstructed += samples[n] * self.sinc((t - sample_times[n]) / (sample_times[1] - sample_times[0]))
         return reconstructed
+
+    # create nyquist interpolation function from the equation
+    def nyquist_interpolation_2(self, samples, t_s, t):
+        z = 0
+        Ns = len(self.samples)
+        fs = 1 / (self.sample_times[1] - self.sample_times[0])
+        Ts = 1 / fs
+        for i in range(-int((Ns - 1) / 2), int((Ns - 1) / 2), 1):
+            n = int(i + (Ns - 1) / 2 + 1)
+            denominator = np.pi * fs * (t - i * Ts)
+            z += self.samples[n] * np.where(denominator == 0, 1, np.sin(denominator) / denominator)
+        return z
 
     def polynomial_interpolation(self, sample_times, samples, t):
         poly = lagrange(sample_times, samples)
@@ -134,6 +151,7 @@ class Reconstruction(QWidget):
         indices = np.argmin(np.abs(sample_times[:, np.newaxis] - t), axis=0)
         indices = np.clip(indices, 0, len(samples) - 1)  # Ensure valid index range
         return samples[indices]
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

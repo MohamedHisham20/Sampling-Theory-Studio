@@ -2,7 +2,6 @@ import sys
 import numpy as np
 import pyqtgraph as pg
 from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QComboBox, QPushButton
-from PySide6.QtCore import Qt
 from scipy.interpolate import interp1d, lagrange, CubicSpline
 
 
@@ -20,11 +19,11 @@ class Reconstruction(QWidget):
         layout.addWidget(self.plot_widget)
 
         # Generate sample data
-        self.sample_times = np.linspace(0, 9, 10)
+        # self.sample_times = np.linspace(0, 9, 10)
+        self.sample_times = np.arange(0, 2, 0.01)
         print("sample times: ", self.sample_times)
-        self.samples = np.sin(self.sample_times)
-        self.t = np.linspace(0, 9.9, 100)
-        print("t values: ", self.t)
+        self.samples = np.cos(2 * np.pi * self.sample_times * 50)
+        self.t = np.linspace(0, 2, 20_000)
 
         # Initial plot of sample data points only without lines in between
         self.plot_widget.plot(self.sample_times, self.samples, pen=None, symbol='o', symbolBrush='r',
@@ -81,7 +80,7 @@ class Reconstruction(QWidget):
             elif technique == "Cubic spline interpolation":
                 reconstructed = self.spline_interpolation(self.sample_times, self.samples, self.t)
             elif technique == "Fourier series interpolation":
-                reconstructed = self.fourier_series_interpolation(self.samples, 10, self.t, T=10)
+                reconstructed = self.fourier_series_interpolation(self.samples, 50, self.t, T=2)
             elif technique == "Nearest neighbor interpolation":
                 reconstructed = self.nearest_neighbor_interpolation(self.sample_times, self.samples, self.t)
 
@@ -137,15 +136,19 @@ class Reconstruction(QWidget):
         return spline(t)
 
     def fourier_series_interpolation(self, samples, num_components, t, T=1.0):
-        n = len(samples)
-        fft_coeffs = np.fft.fft(samples)[:num_components]  # Get first few Fourier coefficients
-        reconstructed = np.zeros_like(t, dtype=np.complex128)  # Use complex128 for reconstruction
+        # Get the first few Fourier coefficients
+        fft_coeffs = np.fft.fft(samples)
 
-        for k in range(num_components):
-            frequency = 2 * np.pi * k / T
-            reconstructed += fft_coeffs[k] * np.exp(1j * frequency * t)
+        # # Zero out the coefficients beyond the specified number of components
+        # fft_coeffs[num_components:] = 0
+        #
+        # Reconstruct the signal using the inverse Fourier transform
+        reconstructed = np.fft.ifft(fft_coeffs)
 
-        return np.real(reconstructed)  # Return the real part of the reconstruction
+        # Interpolate the reconstructed signal to match the time array `t`
+        reconstructed = np.interp(t, np.linspace(0, T, len(reconstructed)), np.real(reconstructed))
+
+        return reconstructed
 
     def nearest_neighbor_interpolation(self, sample_times, samples, t):
         indices = np.argmin(np.abs(sample_times[:, np.newaxis] - t), axis=0)

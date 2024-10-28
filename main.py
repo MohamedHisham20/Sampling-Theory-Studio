@@ -11,6 +11,7 @@ from SignalReconstruction import SignalReconstruction
 from DFTGraph import DFTGraph
 
 
+
 class SamplingStudio(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -186,6 +187,10 @@ class SamplingStudio(QMainWindow):
 
         # Difference plot
         self.time_domain_graphs.draw_difference(self.signal.linspace, data_points, reconstruction_data)
+        
+        #DFT Magnitude Plot
+        og_sampling_frequency = 1 / (self.signal.linspace[1]-self.signal.linspace[0])
+        self.DFTGraph.draw_DFT_magnitude(data_pnts=data_points, sampling_frequency=og_sampling_frequency)
 
 
 if __name__ == "__main__":

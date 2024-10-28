@@ -1,6 +1,5 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout
 import pyqtgraph as pg
-import numpy as np
 
 
 class TimeDomainGraph(QWidget):

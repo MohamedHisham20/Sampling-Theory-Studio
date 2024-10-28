@@ -2,9 +2,7 @@ import sys
 import numpy as np
 import pyqtgraph as pg
 from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QComboBox, QPushButton
-from PySide6.QtCore import Qt
 from scipy.interpolate import interp1d, lagrange, CubicSpline
-
 
 class Reconstruction(QWidget):
     def __init__(self):

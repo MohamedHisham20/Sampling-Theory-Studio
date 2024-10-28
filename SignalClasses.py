@@ -27,7 +27,7 @@ class Signal:
         self.frequency_components = []
         self.signal_type = Signal.COMPOSED
         self.linspace_start = 0
-        self.linspace_stop = 2
+        self.linspace_stop = 10
         self.linspace = np.linspace(self.linspace_start, self.linspace_stop, 10_000)
         self.SNR = Signal.MAXIMUM_SNR
         self.maximum_frequency = 0
@@ -82,6 +82,6 @@ class Signal:
 
     def get_samples(self, sampling_frequency, with_noise=True):
         sampling_period = 1 / sampling_frequency
-        sampling_linspace = np.arange(0, 2, sampling_period)
+        sampling_linspace = np.arange(self.linspace_start, self.linspace_stop, sampling_period)
 
-        return np.interp(sampling_linspace, self.linspace, self.data_points)
+        return np.interp(sampling_linspace, self.linspace, self.data_points), sampling_linspace

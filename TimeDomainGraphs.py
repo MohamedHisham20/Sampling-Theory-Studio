@@ -34,10 +34,9 @@ class TimeDomainGraphs(QWidget):
         layout.addWidget(self.difference_plot)
 
         # Link the plots for synchronized panning and zooming
-        self.reconstruction_plot.setXLink(self.difference_plot)
-        self.reconstruction_plot.setYLink(self.difference_plot)
+        self.reconstruction_plot.setXLink(self.signal_plot)
+        self.reconstruction_plot.setYLink(self.signal_plot)
         self.difference_plot.setXLink(self.signal_plot)
-        self.difference_plot.setYLink(self.signal_plot)
 
     def draw_signal(self, linspace, data_points):
         """Draws a continuous signal in the signal plot."""

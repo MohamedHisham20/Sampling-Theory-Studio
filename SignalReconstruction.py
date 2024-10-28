@@ -63,7 +63,7 @@ class SignalReconstruction:
 
     def fourier_series_interpolation(self):
         """
-        Reconstruct the signal using Fourier series interpolation.
+        Computes the Fourier coefficients and reconstructs the signal using the inverse Fourier transform.
 
         :param samples: np.array containing the sampled data points.
         :param sampling_frequency: int representing the sampling frequency.

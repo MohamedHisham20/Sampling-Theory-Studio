@@ -185,5 +185,4 @@ class SamplingStudio(QMainWindow):
 if __name__ == "__main__":
     app = QApplication([])
     window = SamplingStudio()
-    window.show()
     app.exec()

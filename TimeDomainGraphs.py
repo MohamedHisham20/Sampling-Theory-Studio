@@ -2,14 +2,8 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout
 import pyqtgraph as pg
 
 
-class TimeDomainGraphs(QWidget):
-    def __init__(self, parent=None):
-        super(TimeDomainGraphs, self).__init__(parent)
-
-        # Set up layout
-        layout = QVBoxLayout()
-        self.setLayout(layout)
-
+class TimeDomainGraphs():
+    def __init__(self):
         # Set up three PyQtGraph plot widgets
         self.signal_plot = pg.PlotWidget()
         self.reconstruction_plot = pg.PlotWidget()
@@ -27,11 +21,6 @@ class TimeDomainGraphs(QWidget):
         self.difference_plot.setTitle("Difference Plot")
         self.difference_plot.setLabel("bottom", "Time", units="s")
         self.difference_plot.setLabel("left", "Amplitude")
-
-        # Add plots to layout
-        layout.addWidget(self.signal_plot)
-        layout.addWidget(self.reconstruction_plot)
-        layout.addWidget(self.difference_plot)
 
         # Link the plots for synchronized panning and zooming
         self.reconstruction_plot.setXLink(self.signal_plot)

@@ -7,10 +7,10 @@ class SignalComponent:
         self.frequency = frequency
         self.amplitude = amplitude
         self.phase = phase
-        self.label = f"{amplitude} * sin(2 * pi * {frequency} * t + {phase})"
+        self.label = f"{amplitude} * cos(2 * pi * {frequency} * t + {phase})"
 
     def get_data_points(self, linspace):
-        return self.amplitude * np.sin(2 * np.pi * self.frequency * linspace + self.phase)
+        return self.amplitude * np.cos(2 * np.pi * self.frequency * linspace + self.phase)
 
 
 class Signal:

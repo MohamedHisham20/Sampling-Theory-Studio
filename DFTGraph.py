@@ -23,7 +23,7 @@ class DFTGraph(QWidget):
         """ plots the discrete fourier transform magnitude using FFT
         """
         FFT = np.fft.fft(reconstructed_signal_pnts)
-        FFT_magnitude = np.abs(FFT)
+        FFT_magnitude = np
             
         self.DFT_plot_widget.plotItem.plot(FFT_magnitude)
         

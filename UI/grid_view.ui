@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1080</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1080</width>
+    <height>720</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <item>
+     <widget class="QWidget" name="left_container_controls_widget" native="true">
+      <property name="maximumSize">
+       <size>
+        <width>400</width>
+        <height>1000</height>
+       </size>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <item>
+        <widget class="QTabWidget" name="tabWidget">
+         <property name="minimumSize">
+          <size>
+           <width>300</width>
+           <height>300</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>500</width>
+           <height>400</height>
+          </size>
+         </property>
+         <property name="currentIndex">
+          <number>1</number>
+         </property>
+         <widget class="QWidget" name="compose_signal_tab">
+          <attribute name="title">
+           <string>Compose Signal</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_10">
+           <item>
+            <widget class="QLabel" name="components_label">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>20</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>15</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Components:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QListWidget" name="components_listWidget">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>200</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="compose_signal_freq_line">
+             <item>
+              <widget class="QLabel" name="compose_freq_label">
+               <property name="text">
+                <string>Frequency</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="compose_freq_slider_complex">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QSlider" name="compose_freq_slider">
+                 <property name="maximumSize">
+                  <size>
+                   <width>250</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="tabletTracking">
+                  <bool>false</bool>
+                 </property>
+                 <property name="tracking">
+                  <bool>true</bool>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="invertedAppearance">
+                  <bool>false</bool>
+                 </property>
+                 <property name="invertedControls">
+                  <bool>false</bool>
+                 </property>
+                 <property name="tickPosition">
+                  <enum>QSlider::TicksBelow</enum>
+                 </property>
+                 <property name="tickInterval">
+                  <number>0</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="compose_freq_labels_0_to_100">
+                 <item>
+                  <widget class="QLabel" name="compose_freq_0_label">
+                   <property name="maximumSize">
+                    <size>
+                     <width>500</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>0</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="compose_freq_100_label">
+                   <property name="maximumSize">
+                    <size>
+                     <width>30</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>100</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QLabel" name="compose_hz_label">
+               <property name="text">
+                <string>Hz</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="compose_signal_phase_line">
+             <item>
+              <widget class="QLabel" name="compose_phase_label">
+               <property name="maximumSize">
+                <size>
+                 <width>55</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Phase</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="compose_phase_slider_complex">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QSlider" name="compose_phase_slider">
+                 <property name="maximumSize">
+                  <size>
+                   <width>185</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="tickPosition">
+                  <enum>QSlider::TicksBelow</enum>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="phase_labels_0_to_100">
+                 <item>
+                  <widget class="QLabel" name="phase_label_0">
+                   <property name="text">
+                    <string>0</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="phase_label_100">
+                   <property name="maximumSize">
+                    <size>
+                     <width>30</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>100</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QLabel" name="compose_amplitude_label">
+               <property name="minimumSize">
+                <size>
+                 <width>65</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>60</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Amplitude</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="compose_amplitude_spin_box">
+               <property name="maximumSize">
+                <size>
+                 <width>70</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QPushButton" name="add_component_button">
+             <property name="text">
+              <string>Add Component</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="load_file_tab">
+          <attribute name="title">
+           <string>Load File</string>
+          </attribute>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>10</width>
+               <height>10</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="browse_csv_button">
+             <property name="minimumSize">
+              <size>
+               <width>150</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Load CSV</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>10</width>
+               <height>10</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="snr_line">
+         <item>
+          <widget class="QLabel" name="snr_label">
+           <property name="text">
+            <string>SNR</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="snr_signal_slider_complex">
+           <item>
+            <widget class="QSlider" name="snr_slider">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="tickPosition">
+              <enum>QSlider::TicksBelow</enum>
+             </property>
+             <property name="tickInterval">
+              <number>10</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="snr_labels_0_to_100">
+             <item>
+              <widget class="QLabel" name="snr_0_label">
+               <property name="text">
+                <string>0</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="snr_100_label">
+               <property name="maximumSize">
+                <size>
+                 <width>30</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>100</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="show_noise_checkBox">
+           <property name="text">
+            <string>Show Noise</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="Line" name="line_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="signals_sampling_freq_line">
+         <item>
+          <widget class="QLabel" name="sampling_freq_label">
+           <property name="text">
+            <string>Sampling Frequency</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="sampling_freq_comboBox">
+           <item>
+            <property name="text">
+             <string>New Item</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="f_max_label">
+           <property name="text">
+            <string>* Fmax</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="show_samples_checkBox">
+           <property name="text">
+            <string>Show Samples</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="Line" name="line_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="reconstruction_method_line">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="reconstruction_method_label">
+           <property name="text">
+            <string>Reconstruction Method:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="reconstruction_method_comboBox">
+           <item>
+            <property name="text">
+             <string>New Item</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="right_container">
+      <item>
+       <widget class="QWidget" name="grid_list_buttons" native="true">
+        <property name="maximumSize">
+         <size>
+          <width>75</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::RightToLeft</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="sizeConstraint">
+          <enum>QLayout::SetMaximumSize</enum>
+         </property>
+         <item>
+          <widget class="QPushButton" name="grid_view_button">
+           <property name="maximumSize">
+            <size>
+             <width>40</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>grid</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="list_view_button">
+           <property name="maximumSize">
+            <size>
+             <width>40</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>list</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="graphs_layout">
+        <item>
+         <layout class="QVBoxLayout" name="left_vertical_layout">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QWidget" name="top_left_widget" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>300</width>
+              <height>150</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>600</width>
+              <height>300</height>
+             </size>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout">
+             <item>
+              <widget class="QLabel" name="top_left_label">
+               <property name="text">
+                <string>TextLabel</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="bottom_left_widget" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>300</width>
+              <height>150</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>600</width>
+              <height>300</height>
+             </size>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <item>
+              <widget class="QLabel" name="bottom_left_label">
+               <property name="text">
+                <string>TextLabel</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="right_vertical_layout">
+          <item>
+           <widget class="QWidget" name="top_right_widget" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>300</width>
+              <height>150</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>600</width>
+              <height>300</height>
+             </size>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <item>
+              <widget class="QLabel" name="top_right_label">
+               <property name="text">
+                <string>TextLabel</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="bottom_right_widget" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>300</width>
+              <height>150</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>600</width>
+              <height>300</height>
+             </size>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <item>
+              <widget class="QLabel" name="bottom_right_label">
+               <property name="text">
+                <string>TextLabel</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1080</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

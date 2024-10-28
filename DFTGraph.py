@@ -9,18 +9,19 @@ class DFTGraph():
         self.DFT_plot_widget = pg.PlotWidget()
         
         self.DFT_plot_widget.plotItem.setTitle("DFT Magnitude Plot")
-        self.DFT_plot_widget.plotItem.setLabel(axis="left", text="|F(\u03C9)|") #\u03C9
-        self.DFT_plot_widget.plotItem.setLabel(axis="bottom", text="\u03C9", units="rad/s")
+        self.DFT_plot_widget.plotItem.setLabel(axis="left", text="|F(f)|") #\u03C9
+        self.DFT_plot_widget.plotItem.setLabel(axis="bottom", text="f", units="HZ")
+        self.DFT_plot_widget.plotItem.showGrid(x=True, y=True)
         
         
-    def draw_DFT_magnitude(self, reconstructed_signal_pnts: np.ndarray):
+    def draw_DFT_magnitude(self, data_pnts: np.ndarray, sampling_frequency: int):
         """ plots the discrete fourier transform magnitude using FFT
         """
-        FFT = np.fft.fft(reconstructed_signal_pnts)
-        FFT_magnitude = np
+        self.DFT_plot_widget.plotItem.clear()
+        FFT = np.fft.fft(data_pnts)
+        FFT_magnitude = np.abs(FFT)
+        fo =np.fft.fftfreq(len(data_pnts), 1/sampling_frequency)
             
-        self.DFT_plot_widget.plotItem.plot(FFT_magnitude)
-        
-    def test_plot(self):
-        pass    
+        self.DFT_plot_widget.plotItem.plot(fo ,FFT_magnitude)
+          
             

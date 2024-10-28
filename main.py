@@ -20,17 +20,15 @@ class SamplingStudio(QMainWindow):
         self.setWindowTitle("Sampling Theory Studio")
         self.showMaximized()
 
-        # loader = QUiLoader()
-        # file = QFile("sampling_studio.ui")
-        # file.open(QFile.ReadOnly)
-        # self.ui = loader.load(file, self)
-        # file.close()
+        loader = QUiLoader()
+        file = QFile("UI/grid_view.ui")
+        file.open(QFile.ReadOnly)
+        self.ui = loader.load(file, self)
+        file.close()
 
-        # Create a central widget
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
+        self.setCentralWidget(self.ui)
 
-        layout = QVBoxLayout(central_widget)  # Set layout for the central widget
+        # layout = QVBoxLayout(central_widget)  # Set layout for the central widget
         controls_layout = QHBoxLayout()
 
         # Frequency slider
@@ -98,8 +96,8 @@ class SamplingStudio(QMainWindow):
 
         # List to display components
         self.components_list = QListWidget()
-        layout.addLayout(controls_layout)
-        layout.addWidget(self.components_list)
+        # layout.addLayout(controls_layout)
+        # layout.addWidget(self.components_list)
 
         # Initialize TimeDomainGraph containing the three linked plots
         self.time_domain_graphs = TimeDomainGraphs()
@@ -112,7 +110,7 @@ class SamplingStudio(QMainWindow):
         graph_layout.addWidget(self.time_domain_graphs.difference_plot)
         graph_layout.addWidget(self.DFTGraph.DFT_plot_widget)
 
-        layout.addLayout(graph_layout)
+        # layout.addLayout(graph_layout)
 
         # Connect signals and slots
         self.add_button.clicked.connect(self.add_component)
@@ -188,8 +186,6 @@ class SamplingStudio(QMainWindow):
 
         # Difference plot
         self.time_domain_graphs.draw_difference(self.signal.linspace, data_points, reconstruction_data)
-
-
 
 
 if __name__ == "__main__":

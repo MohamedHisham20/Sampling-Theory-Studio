@@ -1,7 +1,4 @@
 import pyqtgraph as pg
-from PySide6.QtWidgets import QWidget, QVBoxLayout
-from SignalClasses import Signal, SignalComponent
-from typing import List, Tuple
 import numpy as np
 
 class DFTGraph():

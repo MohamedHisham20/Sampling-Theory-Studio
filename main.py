@@ -1,7 +1,9 @@
 import numpy as np
+from PySide6.QtGui import QIcon
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel,
-                               QListWidget, QSlider, QLineEdit, QListWidgetItem, QCheckBox, QComboBox, QDoubleSpinBox)
+                               QListWidget, QSlider, QLineEdit, QListWidgetItem, QCheckBox, QComboBox, QDoubleSpinBox,
+                               QGridLayout)
 from PySide6.QtCore import QFile
 from pyqtgraph.Qt import QtCore
 
@@ -17,9 +19,6 @@ class SamplingStudio(QMainWindow):
 
         self.signal = Signal()
 
-        self.setWindowTitle("Sampling Theory Studio")
-        self.showMaximized()
-
         loader = QUiLoader()
         file = QFile("UI/grid_view.ui")
         file.open(QFile.ReadOnly)
@@ -27,15 +26,17 @@ class SamplingStudio(QMainWindow):
         file.close()
 
         self.setCentralWidget(self.ui)
+        self.ui.showMaximized()
+        self.ui.setWindowTitle("Sampling Theory Studio")
 
         # layout = QVBoxLayout(central_widget)  # Set layout for the central widget
         # controls_layout = QHBoxLayout()
 
         # Frequency Slider
         self.freq_slider = self.ui.findChild(QSlider, "compose_freq_slider")
-        # self.freq_slider.setMinimum(1)
-        # self.freq_slider.setMaximum(80)
-        # self.freq_slider.setValue(30)
+        self.freq_slider.setMinimum(1)
+        self.freq_slider.setMaximum(80)
+        self.freq_slider.setValue(30)
         # controls_layout.addWidget(QLabel("Frequency:"))
         # controls_layout.addWidget(self.freq_slider)
 
@@ -58,7 +59,7 @@ class SamplingStudio(QMainWindow):
         self.snr_slider.setValue(Signal.MAXIMUM_SNR)
 
         # self.snr_slider.setMinimum(1)
-        # self.snr_slider.setMaximum(Signal.MAXIMUM_SNR)
+        # self.snr_slider.setMaximum
         # controls_layout.addWidget(QLabel("SNR:"))
         # controls_layout.addWidget(self.snr_slider)
 
@@ -92,10 +93,11 @@ class SamplingStudio(QMainWindow):
         self.reconstruction_method_combobox = self.ui.findChild(QComboBox, "reconstruction_method_comboBox")
         self.reconstruction_method_combobox.addItem("Zero Order Hold", SignalReconstruction.ZERO_ORDER_HOLD)
         self.reconstruction_method_combobox.addItem("Linear", SignalReconstruction.LINEAR)
-        self.reconstruction_method_combobox.addItem("Nyquist", SignalReconstruction.NYQUIST)
+        self.reconstruction_method_combobox.addItem("Sinc Interpolation", SignalReconstruction.NYQUIST)
         self.reconstruction_method_combobox.addItem("Cubic Spline", SignalReconstruction.CUBIC_SPLINE)
         self.reconstruction_method_combobox.addItem("Fourier", SignalReconstruction.FOURIER)
         self.reconstruction_method_combobox.addItem("Nearest Neighbor", SignalReconstruction.NEAREST_NEIGHBOR)
+        self.reconstruction_method_combobox.setCurrentIndex(2)
         # controls_layout.addWidget(QLabel("Reconstruction Technique:"))
         # controls_layout.addWidget(self.reconstruction_method_combobox)
 
@@ -133,6 +135,13 @@ class SamplingStudio(QMainWindow):
         if bottom_right_label:
             bottom_right_label.setParent(None)
 
+        self.list_view_button = self.ui.findChild(QPushButton, "list_view_button")
+        self.grid_view_button = self.ui.findChild(QPushButton, "grid_view_button")
+        self.list_view_button.setIcon(QIcon("UI/list_view.png"))
+        self.grid_view_button.setIcon(QIcon("UI/grid_view.png"))
+
+        self.ay_7aga = self.ui.findChild(QWidget, "ay_7aga")
+
         # Connect signals and slots
         self.add_button.clicked.connect(self.add_component)
         self.freq_slider.valueChanged.connect(self.update_active_component)
@@ -143,6 +152,8 @@ class SamplingStudio(QMainWindow):
         self.sampling_freq_combobox.currentIndexChanged.connect(self.plot_signal)
         self.reconstruction_method_combobox.currentIndexChanged.connect(self.plot_signal)
         self.components_list.itemDoubleClicked.connect(self.remove_component)
+        self.list_view_button.clicked.connect(self.show_list_view)
+        self.grid_view_button.clicked.connect(self.show_grid_view)
 
         # Timer for real-time updates
         self.timer = QtCore.QTimer()
@@ -218,6 +229,48 @@ class SamplingStudio(QMainWindow):
             return value
         value = value - 9
         return 10 ** value
+
+    def show_list_view(self):
+        self.list_view_button.setEnabled(False)
+        self.grid_view_button.setEnabled(True)
+
+        original_layout = self.ay_7aga.layout()
+        self.ay_7aga.clearLayout(original_layout)
+
+        list_layout = QVBoxLayout()
+
+        list_layout.addWidget(self.time_domain_graphs.signal_plot)
+        list_layout.addWidget(self.time_domain_graphs.reconstruction_plot)
+        list_layout.addWidget(self.time_domain_graphs.difference_plot)
+        list_layout.addWidget(self.DFTGraph.DFT_plot_widget)
+
+        self.ay_7aga.addLayout(list_layout)
+
+    def show_grid_view(self):
+        self.list_view_button.setEnabled(True)
+        self.grid_view_button.setEnabled(False)
+
+        original_layout = self.ay_7aga.layout()
+        self.ay_7aga.clearLayout(original_layout)
+
+        grid_layout = QGridLayout()
+
+        grid_layout.addWidget(self.time_domain_graphs.signal_plot, 0, 0)
+        grid_layout.addWidget(self.time_domain_graphs.reconstruction_plot, 0, 1)
+        grid_layout.addWidget(self.time_domain_graphs.difference_plot, 1, 0)
+        grid_layout.addWidget(self.DFTGraph.DFT_plot_widget, 1, 1)
+
+        self.ay_7aga.addLayout(grid_layout)
+
+
+    def clear_layout(self, layout):
+        # Helper method to clear any existing widgets in the layout
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.setParent(None)
+
 
 
 if __name__ == "__main__":

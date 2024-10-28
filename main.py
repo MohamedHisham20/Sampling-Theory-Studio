@@ -30,58 +30,58 @@ class SamplingStudio(QMainWindow):
         self.setCentralWidget(self.ui)
 
         # layout = QVBoxLayout(central_widget)  # Set layout for the central widget
-        controls_layout = QHBoxLayout()
+        # controls_layout = QHBoxLayout()
 
-        # Frequency slider
-        self.freq_slider = QSlider(QtCore.Qt.Horizontal)
-        self.freq_slider.setMinimum(1)
-        self.freq_slider.setMaximum(80)
-        self.freq_slider.setValue(30)
-        controls_layout.addWidget(QLabel("Frequency:"))
-        controls_layout.addWidget(self.freq_slider)
+        # Frequency Slider
+        # self.freq_slider = QSlider(QtCore.Qt.Horizontal)
+        # self.freq_slider.setMinimum(1)
+        # self.freq_slider.setMaximum(80)
+        # self.freq_slider.setValue(30)
+        # controls_layout.addWidget(QLabel("Frequency:"))
+        # controls_layout.addWidget(self.freq_slider)
 
         # Phase slider
-        self.phase_slider = QSlider(QtCore.Qt.Horizontal)
-        self.phase_slider.setMinimum(0)
-        self.phase_slider.setMaximum(360)
-        self.phase_slider.setValue(0)
-        controls_layout.addWidget(QLabel("Phase:"))
-        controls_layout.addWidget(self.phase_slider)
+        # self.phase_slider = QSlider(QtCore.Qt.Horizontal)
+        # self.phase_slider.setMinimum(0)
+        # self.phase_slider.setMaximum(360)
+        # self.phase_slider.setValue(0)
+        # controls_layout.addWidget(QLabel("Phase:"))
+        # controls_layout.addWidget(self.phase_slider)
 
         # Amplitude input
-        self.amplitude_input = QLineEdit()
-        self.amplitude_input.setText("1.0")
-        controls_layout.addWidget(QLabel("Amplitude:"))
-        controls_layout.addWidget(self.amplitude_input)
+        # self.amplitude_input = QLineEdit()
+        # self.amplitude_input.setText("1.0")
+        # controls_layout.addWidget(QLabel("Amplitude:"))
+        # controls_layout.addWidget(self.amplitude_input)
 
         # SNR slider
-        self.snr_slider = QSlider(QtCore.Qt.Horizontal)
-        self.snr_slider.setMinimum(1)
-        self.snr_slider.setMaximum(Signal.MAXIMUM_SNR)
-        self.snr_slider.setValue(Signal.MAXIMUM_SNR)
-        controls_layout.addWidget(QLabel("SNR:"))
-        controls_layout.addWidget(self.snr_slider)
+        # self.snr_slider = QSlider(QtCore.Qt.Horizontal)
+        # self.snr_slider.setMinimum(1)
+        # self.snr_slider.setMaximum(Signal.MAXIMUM_SNR)
+        # self.snr_slider.setValue(Signal.MAXIMUM_SNR)
+        # controls_layout.addWidget(QLabel("SNR:"))
+        # controls_layout.addWidget(self.snr_slider)
 
         # Noise checkbox
-        self.noise_checkbox = QCheckBox("Show Noise")
-        self.noise_checkbox.setChecked(True)
-        controls_layout.addWidget(self.noise_checkbox)
+        # self.noise_checkbox = QCheckBox("Show Noise")
+        # self.noise_checkbox.setChecked(True)
+        # controls_layout.addWidget(self.noise_checkbox)
 
         # Checkbox to show samples
-        self.show_samples_checkbox = QCheckBox("Show Samples")
-        self.show_samples_checkbox.setChecked(True)
-        controls_layout.addWidget(self.show_samples_checkbox)
+        # self.show_samples_checkbox = QCheckBox("Show Samples")
+        # self.show_samples_checkbox.setChecked(True)
+        # controls_layout.addWidget(self.show_samples_checkbox)
 
         # Sampling frequency slider
-        self.sampling_freq_slider = QSlider(QtCore.Qt.Horizontal)
-        self.sampling_freq_slider.setMinimum(1)
-        self.sampling_freq_slider.setMaximum(10)
-        self.sampling_freq_slider.setValue(2)
-        controls_layout.addWidget(QLabel("Sampling Freq (x Max Freq):"))
-        controls_layout.addWidget(self.sampling_freq_slider)
+        # self.sampling_freq_slider = QSlider(QtCore.Qt.Horizontal)
+        # self.sampling_freq_slider.setMinimum(1)
+        # self.sampling_freq_slider.setMaximum(10)
+        # self.sampling_freq_slider.setValue(2)
+        # controls_layout.addWidget(QLabel("Sampling Freq (x Max Freq):"))
+        # controls_layout.addWidget(self.sampling_freq_slider)
 
         # Combo box for reconstruction techniques
-        self.reconstruction_method_combobox = QComboBox()
+        self.reconstruction_method_combobox = self.ui.findChild(QComboBox, "reconstruction_method_combobox")
         self.reconstruction_method_combobox.addItem("Zero Order Hold", SignalReconstruction.ZERO_ORDER_HOLD)
         self.reconstruction_method_combobox.addItem("Linear", SignalReconstruction.LINEAR)
         self.reconstruction_method_combobox.addItem("Nyquist", SignalReconstruction.NYQUIST)

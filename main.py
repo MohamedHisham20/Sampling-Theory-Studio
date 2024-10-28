@@ -115,25 +115,11 @@ class SamplingStudio(QMainWindow):
 
         self.DFTGraph = DFTGraph()
 
-        self.ui.findChild(QWidget, "top_left_widget").layout().addWidget(self.time_domain_graphs.signal_plot)
-        self.ui.findChild(QWidget, "top_right_widget").layout().addWidget(self.time_domain_graphs.reconstruction_plot)
-        self.ui.findChild(QWidget, "bottom_left_widget").layout().addWidget(self.time_domain_graphs.difference_plot)
-        self.ui.findChild(QWidget, "bottom_right_widget").layout().addWidget(self.DFTGraph.DFT_plot_widget)
+        # self.ui.findChild(QWidget, "top_left_widget").layout().addWidget(self.time_domain_graphs.signal_plot)
+        # self.ui.findChild(QWidget, "top_right_widget").layout().addWidget(self.time_domain_graphs.reconstruction_plot)
+        # self.ui.findChild(QWidget, "bottom_left_widget").layout().addWidget(self.time_domain_graphs.difference_plot)
+        # self.ui.findChild(QWidget, "bottom_right_widget").layout().addWidget(self.DFTGraph.DFT_plot_widget)
         # layout.addLayout(graph_layout)
-
-        top_right_label = self.ui.findChild(QLabel, "top_right_label")
-        top_left_label = self.ui.findChild(QLabel, "top_left_label")
-        bottom_left_label = self.ui.findChild(QLabel, "bottom_left_label")
-        bottom_right_label = self.ui.findChild(QLabel, "bottom_right_label")
-
-        if top_right_label:
-            top_right_label.setParent(None)
-        if top_left_label:
-            top_left_label.setParent(None)
-        if bottom_left_label:
-            bottom_left_label.setParent(None)
-        if bottom_right_label:
-            bottom_right_label.setParent(None)
 
         self.list_view_button = self.ui.findChild(QPushButton, "list_view_button")
         self.grid_view_button = self.ui.findChild(QPushButton, "grid_view_button")
@@ -141,6 +127,7 @@ class SamplingStudio(QMainWindow):
         self.grid_view_button.setIcon(QIcon("UI/grid_view.png"))
 
         self.ay_7aga = self.ui.findChild(QWidget, "ay_7aga")
+        self.show_list_view()
 
         # Connect signals and slots
         self.add_button.clicked.connect(self.add_component)
@@ -234,43 +221,51 @@ class SamplingStudio(QMainWindow):
         self.list_view_button.setEnabled(False)
         self.grid_view_button.setEnabled(True)
 
-        original_layout = self.ay_7aga.layout()
-        self.ay_7aga.clearLayout(original_layout)
+        # # Set the parent of each graph to None
+        # self.time_domain_graphs.signal_plot.setParent(None)
+        # self.time_domain_graphs.reconstruction_plot.setParent(None)
+        # self.time_domain_graphs.difference_plot.setParent(None)
+        # self.DFTGraph.DFT_plot_widget.setParent(None)
 
-        list_layout = QVBoxLayout()
+        self.list_layout = QVBoxLayout()
 
-        list_layout.addWidget(self.time_domain_graphs.signal_plot)
-        list_layout.addWidget(self.time_domain_graphs.reconstruction_plot)
-        list_layout.addWidget(self.time_domain_graphs.difference_plot)
-        list_layout.addWidget(self.DFTGraph.DFT_plot_widget)
+        self.list_layout.addWidget(self.time_domain_graphs.signal_plot)
+        self.list_layout.addWidget(self.time_domain_graphs.reconstruction_plot)
+        self.list_layout.addWidget(self.time_domain_graphs.difference_plot)
+        self.list_layout.addWidget(self.DFTGraph.DFT_plot_widget)
 
-        self.ay_7aga.addLayout(list_layout)
+        self.ay_7aga.setLayout(self.list_layout)
 
     def show_grid_view(self):
         self.list_view_button.setEnabled(True)
         self.grid_view_button.setEnabled(False)
 
-        original_layout = self.ay_7aga.layout()
-        self.ay_7aga.clearLayout(original_layout)
+        # Set the parent of each graph to None
+        # self.time_domain_graphs.signal_plot.setParent(None)
+        # self.time_domain_graphs.reconstruction_plot.setParent(None)
+        # self.time_domain_graphs.difference_plot.setParent(None)
+        # self.DFTGraph.DFT_plot_widget.setParent(None)
 
-        grid_layout = QGridLayout()
+        self.grid_layout = QGridLayout()
 
-        grid_layout.addWidget(self.time_domain_graphs.signal_plot, 0, 0)
-        grid_layout.addWidget(self.time_domain_graphs.reconstruction_plot, 0, 1)
-        grid_layout.addWidget(self.time_domain_graphs.difference_plot, 1, 0)
-        grid_layout.addWidget(self.DFTGraph.DFT_plot_widget, 1, 1)
+        self.grid_layout.addWidget(self.time_domain_graphs.signal_plot, 0, 0)
+        self.grid_layout.addWidget(self.time_domain_graphs.reconstruction_plot, 0, 1)
+        self.grid_layout.addWidget(self.time_domain_graphs.difference_plot, 1, 0)
+        self.grid_layout.addWidget(self.DFTGraph.DFT_plot_widget, 1, 1)
 
-        self.ay_7aga.addLayout(grid_layout)
+        self.ay_7aga.setLayout(self.grid_layout)
 
-
-    def clear_layout(self, layout):
-        # Helper method to clear any existing widgets in the layout
-        while layout.count():
-            item = layout.takeAt(0)
-            widget = item.widget()
-            if widget is not None:
-                widget.setParent(None)
-
+    # def clear_layout(self, layout):
+    #     if layout is None:
+    #         return
+    #     while layout.count():
+    #         item = layout.takeAt(0)
+    #         widget = item.widget()
+    #         if widget is not None:
+    #             widget.deleteLater()  # Deletes widget properly
+    #         elif item.layout() is not None:
+    #             self.clear_layout(item.layout())  # Recursively clear child layouts
+    #     layout.deleteLater()  # Delete the layout itself if necessary
 
 
 if __name__ == "__main__":

@@ -127,7 +127,9 @@ class SamplingStudio(QMainWindow):
         self.grid_view_button.setIcon(QIcon("UI/grid_view.png"))
 
         self.ay_7aga = self.ui.findChild(QWidget, "ay_7aga")
-        self.show_list_view()
+        self.grid_layout = QGridLayout()
+        self.show_grid_view()
+        self.ay_7aga.setLayout(self.grid_layout)
 
         # Connect signals and slots
         self.add_button.clicked.connect(self.add_component)
@@ -221,39 +223,29 @@ class SamplingStudio(QMainWindow):
         self.list_view_button.setEnabled(False)
         self.grid_view_button.setEnabled(True)
 
-        # # Set the parent of each graph to None
-        # self.time_domain_graphs.signal_plot.setParent(None)
-        # self.time_domain_graphs.reconstruction_plot.setParent(None)
-        # self.time_domain_graphs.difference_plot.setParent(None)
-        # self.DFTGraph.DFT_plot_widget.setParent(None)
+        self.clear_grid_layout()
 
-        self.list_layout = QVBoxLayout()
-
-        self.list_layout.addWidget(self.time_domain_graphs.signal_plot)
-        self.list_layout.addWidget(self.time_domain_graphs.reconstruction_plot)
-        self.list_layout.addWidget(self.time_domain_graphs.difference_plot)
-        self.list_layout.addWidget(self.DFTGraph.DFT_plot_widget)
-
-        self.ay_7aga.setLayout(self.list_layout)
+        self.grid_layout.addWidget(self.time_domain_graphs.signal_plot, 0, 0)
+        self.grid_layout.addWidget(self.time_domain_graphs.reconstruction_plot, 1, 0)
+        self.grid_layout.addWidget(self.time_domain_graphs.difference_plot, 2, 0)
+        self.grid_layout.addWidget(self.DFTGraph.DFT_plot_widget, 3, 0)
 
     def show_grid_view(self):
         self.list_view_button.setEnabled(True)
         self.grid_view_button.setEnabled(False)
 
-        # Set the parent of each graph to None
-        # self.time_domain_graphs.signal_plot.setParent(None)
-        # self.time_domain_graphs.reconstruction_plot.setParent(None)
-        # self.time_domain_graphs.difference_plot.setParent(None)
-        # self.DFTGraph.DFT_plot_widget.setParent(None)
-
-        self.grid_layout = QGridLayout()
+        self.clear_grid_layout()
 
         self.grid_layout.addWidget(self.time_domain_graphs.signal_plot, 0, 0)
         self.grid_layout.addWidget(self.time_domain_graphs.reconstruction_plot, 0, 1)
         self.grid_layout.addWidget(self.time_domain_graphs.difference_plot, 1, 0)
         self.grid_layout.addWidget(self.DFTGraph.DFT_plot_widget, 1, 1)
 
-        self.ay_7aga.setLayout(self.grid_layout)
+    def clear_grid_layout(self):
+        self.grid_layout.removeWidget(self.time_domain_graphs.signal_plot)
+        self.grid_layout.removeWidget(self.time_domain_graphs.reconstruction_plot)
+        self.grid_layout.removeWidget(self.time_domain_graphs.difference_plot)
+        self.grid_layout.removeWidget(self.DFTGraph.DFT_plot_widget)
 
     # def clear_layout(self, layout):
     #     if layout is None:

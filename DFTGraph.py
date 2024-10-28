@@ -4,15 +4,9 @@ from SignalClasses import Signal, SignalComponent
 from typing import List, Tuple
 import numpy as np
 
-class DFTGraph(QWidget):
+class DFTGraph():
     def __init__(self):
-        super().__init__()
-        
-        layout = QVBoxLayout()
-        self.setLayout(layout)
-        
         self.DFT_plot_widget = pg.PlotWidget()
-        layout.addWidget(self.DFT_plot_widget)
         
         self.DFT_plot_widget.plotItem.setTitle("DFT Magnitude Plot")
         self.DFT_plot_widget.plotItem.setLabel(axis="left", text="|F(\u03C9)|") #\u03C9

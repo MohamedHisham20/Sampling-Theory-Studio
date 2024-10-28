@@ -8,6 +8,7 @@ from pyqtgraph.Qt import QtCore
 from SignalClasses import Signal
 from TimeDomainGraphs import TimeDomainGraphs
 from SignalReconstruction import SignalReconstruction
+from DFTGraph import DFTGraph
 
 
 class SamplingStudio(QMainWindow):
@@ -103,8 +104,15 @@ class SamplingStudio(QMainWindow):
         # Initialize TimeDomainGraph containing the three linked plots
         self.time_domain_graphs = TimeDomainGraphs()
 
-        # Add TimeDomainGraph to the main layout
-        layout.addWidget(self.time_domain_graphs)
+        self.DFTGraph = DFTGraph()
+
+        graph_layout = QVBoxLayout()
+        graph_layout.addWidget(self.time_domain_graphs.signal_plot)
+        graph_layout.addWidget(self.time_domain_graphs.reconstruction_plot)
+        graph_layout.addWidget(self.time_domain_graphs.difference_plot)
+        graph_layout.addWidget(self.DFTGraph.DFT_plot_widget)
+
+        layout.addLayout(graph_layout)
 
         # Connect signals and slots
         self.add_button.clicked.connect(self.add_component)
@@ -180,6 +188,8 @@ class SamplingStudio(QMainWindow):
 
         # Difference plot
         self.time_domain_graphs.draw_difference(self.signal.linspace, data_points, reconstruction_data)
+
+
 
 
 if __name__ == "__main__":

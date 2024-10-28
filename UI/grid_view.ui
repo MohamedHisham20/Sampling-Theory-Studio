@@ -2266,7 +2266,7 @@ PlotWidget {
                <item>
                 <layout class="QHBoxLayout" name="compose_freq_labels_0_to_100">
                  <item>
-                  <widget class="QLabel" name="compose_freq_0_label">
+                  <widget class="QLabel" name="compose_freq_1_label">
                    <property name="maximumSize">
                     <size>
                      <width>500</width>
@@ -2274,7 +2274,7 @@ PlotWidget {
                     </size>
                    </property>
                    <property name="text">
-                    <string>0</string>
+                    <string>1</string>
                    </property>
                   </widget>
                  </item>
@@ -2428,7 +2428,7 @@ PlotWidget {
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>60</width>
+                 <width>70</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -2560,7 +2560,7 @@ PlotWidget {
               <item>
                <layout class="QHBoxLayout" name="snr_labels_0_to_100">
                 <item>
-                 <widget class="QLabel" name="snr_0_label">
+                 <widget class="QLabel" name="snr_1_label">
                   <property name="maximumSize">
                    <size>
                     <width>70</width>
@@ -2576,21 +2576,21 @@ PlotWidget {
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="label">
+                 <widget class="QLabel" name="snr_label_5">
                   <property name="text">
                    <string>5</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="label_2">
+                 <widget class="QLabel" name="snr_label_10">
                   <property name="text">
                    <string>10</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="label_3">
+                 <widget class="QLabel" name="snr_label_50">
                   <property name="text">
                    <string>50</string>
                   </property>
@@ -2726,6 +2726,9 @@ PlotWidget {
     </item>
     <item>
      <layout class="QVBoxLayout" name="right_container">
+      <property name="spacing">
+       <number>0</number>
+      </property>
       <item>
        <widget class="QWidget" name="grid_list_buttons" native="true">
         <property name="maximumSize">
@@ -2797,154 +2800,162 @@ PlotWidget {
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="graphs_layout">
-        <item>
-         <layout class="QVBoxLayout" name="left_vertical_layout">
-          <property name="spacing">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QWidget" name="top_left_widget" native="true">
-            <property name="minimumSize">
-             <size>
-              <width>300</width>
-              <height>150</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>600</width>
-              <height>300</height>
-             </size>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout">
-             <property name="spacing">
-              <number>0</number>
+       <widget class="QWidget" name="ay_7aga" native="true">
+        <layout class="QHBoxLayout" name="graphs_layout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <layout class="QVBoxLayout" name="left_vertical_layout">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QWidget" name="top_left_widget" native="true">
+             <property name="minimumSize">
+              <size>
+               <width>300</width>
+               <height>150</height>
+              </size>
              </property>
-             <property name="leftMargin">
-              <number>0</number>
+             <property name="maximumSize">
+              <size>
+               <width>600</width>
+               <height>300</height>
+              </size>
              </property>
-             <property name="topMargin">
-              <number>0</number>
+             <layout class="QVBoxLayout" name="verticalLayout">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="bottom_left_widget" native="true">
+             <property name="minimumSize">
+              <size>
+               <width>300</width>
+               <height>150</height>
+              </size>
              </property>
-             <property name="rightMargin">
-              <number>0</number>
+             <property name="maximumSize">
+              <size>
+               <width>600</width>
+               <height>300</height>
+              </size>
              </property>
-             <property name="bottomMargin">
-              <number>0</number>
+             <property name="styleSheet">
+              <string notr="true">border-color: rgb(255, 255, 255);</string>
              </property>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QWidget" name="bottom_left_widget" native="true">
-            <property name="minimumSize">
-             <size>
-              <width>300</width>
-              <height>150</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>600</width>
-              <height>300</height>
-             </size>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_4">
-             <property name="spacing">
-              <number>0</number>
+             <layout class="QVBoxLayout" name="verticalLayout_4">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="right_vertical_layout">
+           <item>
+            <widget class="QWidget" name="top_right_widget" native="true">
+             <property name="minimumSize">
+              <size>
+               <width>300</width>
+               <height>150</height>
+              </size>
              </property>
-             <property name="leftMargin">
-              <number>0</number>
+             <property name="maximumSize">
+              <size>
+               <width>600</width>
+               <height>300</height>
+              </size>
              </property>
-             <property name="topMargin">
-              <number>0</number>
+             <layout class="QVBoxLayout" name="verticalLayout_5">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QWidget" name="bottom_right_widget" native="true">
+             <property name="minimumSize">
+              <size>
+               <width>300</width>
+               <height>150</height>
+              </size>
              </property>
-             <property name="rightMargin">
-              <number>0</number>
+             <property name="maximumSize">
+              <size>
+               <width>600</width>
+               <height>300</height>
+              </size>
              </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-            </layout>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="right_vertical_layout">
-          <item>
-           <widget class="QWidget" name="top_right_widget" native="true">
-            <property name="minimumSize">
-             <size>
-              <width>300</width>
-              <height>150</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>600</width>
-              <height>300</height>
-             </size>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_5">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QWidget" name="bottom_right_widget" native="true">
-            <property name="minimumSize">
-             <size>
-              <width>300</width>
-              <height>150</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>600</width>
-              <height>300</height>
-             </size>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_3">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-            </layout>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
+             <layout class="QVBoxLayout" name="verticalLayout_3">
+              <property name="spacing">
+               <number>0</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
       </item>
      </layout>
     </item>

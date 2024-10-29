@@ -1,9 +1,9 @@
 import numpy as np
 from PySide6.QtGui import QIcon
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel,
-                               QListWidget, QSlider, QLineEdit, QListWidgetItem, QCheckBox, QComboBox, QDoubleSpinBox,
-                               QGridLayout)
+from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QPushButton, QLabel,
+                               QListWidget, QSlider, QListWidgetItem, QCheckBox, QComboBox, QDoubleSpinBox,
+                               QGridLayout, QTabWidget, QFileDialog)
 from PySide6.QtCore import QFile
 from pyqtgraph.Qt import QtCore
 
@@ -39,6 +39,9 @@ class SamplingStudio(QMainWindow):
         self.freq_slider.setValue(30)
         # controls_layout.addWidget(QLabel("Frequency:"))
         # controls_layout.addWidget(self.freq_slider)
+
+        self.frequency_label = self.ui.findChild(QLabel, "compose_hz_label")
+        self.frequency_label.setText("30 Hz")
 
         # Phase slider
         self.phase_slider = self.ui.findChild(QSlider, "compose_phase_slider")
@@ -131,6 +134,9 @@ class SamplingStudio(QMainWindow):
         self.show_grid_view()
         self.ay_7aga.setLayout(self.grid_layout)
 
+        self.tab_widget = self.ui.findChild(QTabWidget, "tabWidget")
+        self.load_signal_button = self.ui.findChild(QPushButton, "browse_csv_button")
+
         # Connect signals and slots
         self.add_button.clicked.connect(self.add_component)
         self.freq_slider.valueChanged.connect(self.update_active_component)
@@ -143,6 +149,8 @@ class SamplingStudio(QMainWindow):
         self.components_list.itemDoubleClicked.connect(self.remove_component)
         self.list_view_button.clicked.connect(self.show_list_view)
         self.grid_view_button.clicked.connect(self.show_grid_view)
+        self.load_signal_button.clicked.connect(self.load_signal)
+        self.tab_widget.currentChanged.connect(self.change_signal_type)
 
         # Timer for real-time updates
         self.timer = QtCore.QTimer()
@@ -150,11 +158,39 @@ class SamplingStudio(QMainWindow):
         self.timer.timeout.connect(self.plot_signal)
         self.timer.start()
 
+    def change_signal_type(self):
+        index = self.tab_widget.currentIndex()
+        if index == 0:
+            self.signal.signal_type = Signal.COMPOSED
+        else:
+            self.signal.signal_type = Signal.FROM_FILE
+
+    def load_signal(self):
+        # open a file dialog, and load the signal from the selected file
+        file_path = self.open_file_dialog()
+        if file_path is not None:
+            self.signal = Signal.from_file(file_path)
+            if self.signal is not None:
+                self.plot_signal()
+
+    @staticmethod
+    def open_file_dialog():
+        file_dialog = QFileDialog()
+        file_dialog.setFileMode(QFileDialog.ExistingFile)
+        file_dialog.setNameFilter("CSV files (*.csv)")
+        if file_dialog.exec():
+            file_path = file_dialog.selectedFiles()[0]
+            return file_path
+        return None
+
     def update_active_component(self):
         frequency = self.freq_slider.value()
         amplitude = float(self.amplitude_input.text())
         phase = np.radians(self.phase_slider.value())
         self.signal.update_active_component(frequency, amplitude, phase)
+        self.plot_signal()
+        string = str(frequency) + " Hz"
+        self.frequency_label.setText(string)
 
     def add_component(self):
         self.signal.add_frequency_component()
@@ -183,13 +219,13 @@ class SamplingStudio(QMainWindow):
 
     def plot_signal(self):
         with_noise = self.noise_checkbox.isChecked()
-        data_points = self.signal.get_data_points(with_noise=with_noise)
+        data_points, sampled_data, sample_linspace = self.signal.get_data_points(with_noise, self.sampling_freq_combobox.currentData())
+        if data_points is None:
+            return
 
         # Plot the original signal
         self.time_domain_graphs.draw_signal(self.signal.linspace, data_points)
 
-        # Plot sampled data points if needed
-        sampled_data, sample_linspace = self.signal.get_samples(self.sampling_freq_combobox.currentData(), with_noise)
         if self.show_samples_checkbox.isChecked():
             self.time_domain_graphs.draw_samples(sample_linspace, sampled_data)
 
@@ -246,18 +282,6 @@ class SamplingStudio(QMainWindow):
         self.grid_layout.removeWidget(self.time_domain_graphs.reconstruction_plot)
         self.grid_layout.removeWidget(self.time_domain_graphs.difference_plot)
         self.grid_layout.removeWidget(self.DFTGraph.DFT_plot_widget)
-
-    # def clear_layout(self, layout):
-    #     if layout is None:
-    #         return
-    #     while layout.count():
-    #         item = layout.takeAt(0)
-    #         widget = item.widget()
-    #         if widget is not None:
-    #             widget.deleteLater()  # Deletes widget properly
-    #         elif item.layout() is not None:
-    #             self.clear_layout(item.layout())  # Recursively clear child layouts
-    #     layout.deleteLater()  # Delete the layout itself if necessary
 
 
 if __name__ == "__main__":

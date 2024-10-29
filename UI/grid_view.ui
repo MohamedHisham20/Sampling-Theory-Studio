@@ -2462,6 +2462,13 @@ PlotWidget {
              </property>
             </widget>
            </item>
+           <item>
+            <widget class="QPushButton" name="save_signal_button">
+             <property name="text">
+              <string>Export Signal</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
          <widget class="QWidget" name="load_file_tab">
@@ -2657,15 +2664,18 @@ PlotWidget {
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="sampling_freq_comboBox"/>
+             <widget class="QSpinBox" name="sampling_freq_spinBox"/>
             </item>
             <item>
              <widget class="QLabel" name="f_max_label">
               <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;&amp;#215; F&lt;/span&gt;&lt;span style=&quot; font-size:12pt; vertical-align:sub;&quot;&gt;max&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt; vertical-align:sub;&quot;&gt;Hz&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="textFormat">
                <enum>Qt::TextFormat::MarkdownText</enum>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
               </property>
              </widget>
             </item>

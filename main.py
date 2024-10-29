@@ -1,11 +1,9 @@
-import sys
-
 import numpy as np
 from PySide6.QtGui import QIcon
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QPushButton, QLabel,
                                QListWidget, QSlider, QListWidgetItem, QCheckBox, QComboBox, QDoubleSpinBox,
-                               QGridLayout, QTabWidget, QFileDialog)
+                               QGridLayout, QTabWidget, QFileDialog, QSpinBox)
 from PySide6.QtCore import QFile
 from pyqtgraph.Qt import QtCore
 
@@ -38,12 +36,12 @@ class SamplingStudio(QMainWindow):
         self.freq_slider = self.ui.findChild(QSlider, "compose_freq_slider")
         self.freq_slider.setMinimum(1)
         self.freq_slider.setMaximum(30)
-        self.freq_slider.setValue(1)
+        self.freq_slider.setValue(2)
         # controls_layout.addWidget(QLabel("Frequency:"))
         # controls_layout.addWidget(self.freq_slider)
 
         self.frequency_label = self.ui.findChild(QLabel, "compose_hz_label")
-        self.frequency_label.setText("1 Hz")
+        self.frequency_label.setText("2 Hz")
 
         # Phase slider
         self.phase_slider = self.ui.findChild(QSlider, "compose_phase_slider")
@@ -79,13 +77,8 @@ class SamplingStudio(QMainWindow):
         # controls_layout.addWidget(self.show_samples_checkbox)
 
         # Sampling frequency slider
-        self.sampling_freq_combobox = self.ui.findChild(QComboBox, "sampling_freq_comboBox")
-        self.sampling_freq_combobox.addItem("0.5", 0.5)
-        self.sampling_freq_combobox.addItem("1", 1)
-        self.sampling_freq_combobox.addItem("2", 2)
-        self.sampling_freq_combobox.addItem("3", 3)
-        self.sampling_freq_combobox.addItem("4", 4)
-        self.sampling_freq_combobox.setCurrentIndex(2)
+        self.sampling_freq_spinBox = self.ui.findChild(QSpinBox, "sampling_freq_spinBox")
+        self.sampling_freq_spinBox.setValue(2)
         # self.sampling_freq_slider = QSlider(QtCore.Qt.Horizontal)
         # self.sampling_freq_slider.setMinimum(1)
         # self.sampling_freq_slider.setMaximum(10)
@@ -138,6 +131,8 @@ class SamplingStudio(QMainWindow):
         self.tab_widget = self.ui.findChild(QTabWidget, "tabWidget")
         self.load_signal_button = self.ui.findChild(QPushButton, "browse_csv_button")
 
+        self.export_signal_button = self.ui.findChild(QPushButton, "save_signal_button")
+
         # Connect signals and slots
         self.add_button.clicked.connect(self.add_component)
         self.freq_slider.valueChanged.connect(self.update_active_component)
@@ -145,19 +140,35 @@ class SamplingStudio(QMainWindow):
         self.amplitude_input.textChanged.connect(self.update_active_component)
         self.snr_slider.valueChanged.connect(self.update_snr)
         self.noise_checkbox.stateChanged.connect(self.plot_signal)
-        self.sampling_freq_combobox.currentIndexChanged.connect(self.plot_signal)
+        self.sampling_freq_spinBox.valueChanged.connect(self.plot_signal)
         self.reconstruction_method_combobox.currentIndexChanged.connect(self.plot_signal)
         self.components_list.itemDoubleClicked.connect(self.remove_component)
         self.list_view_button.clicked.connect(self.show_list_view)
         self.grid_view_button.clicked.connect(self.show_grid_view)
         self.load_signal_button.clicked.connect(self.load_signal)
         self.tab_widget.currentChanged.connect(self.change_signal_type)
+        self.export_signal_button.clicked.connect(self.export_signal)
 
         # Timer for real-time updates
         self.timer = QtCore.QTimer()
         self.timer.setInterval(100)
         self.timer.timeout.connect(self.plot_signal)
         self.timer.start()
+
+    def export_signal(self):
+        data_points, _, _ = self.signal.get_data_points(with_noise=False)
+        linspace_period = self.signal.linspace[1] - self.signal.linspace[0]
+
+        # Prepare data to save, with the first row as the sampling period
+        data_to_save = np.vstack(([linspace_period], data_points))
+
+        # Save to CSV
+        options = QFileDialog.Options()
+        file_path, _ = QFileDialog.getSaveFileName(None, "Save Signal Data", "", "CSV Files (*.csv);;All Files (*)",
+                                                   options=options)
+
+        np.savetxt(file_path, data_to_save.T, delimiter=',', header='Sampling Period,Data Points', comments='')
+
 
     def change_signal_type(self):
         index = self.tab_widget.currentIndex()
@@ -219,7 +230,7 @@ class SamplingStudio(QMainWindow):
 
     def plot_signal(self):
         with_noise = self.noise_checkbox.isChecked()
-        data_points, sampled_data, sample_linspace = self.signal.get_data_points(with_noise, self.sampling_freq_combobox.currentData())
+        data_points, sampled_data, sample_linspace = self.signal.get_data_points(with_noise, self.sampling_freq_spinBox.value())
         if data_points is None:
             return
 
@@ -234,7 +245,7 @@ class SamplingStudio(QMainWindow):
 
         # Perform reconstruction with the selected technique
         maximum_frequency = self.signal.get_maximum_frequency()
-        sampling_frequency = self.sampling_freq_combobox.currentData() * maximum_frequency
+        sampling_frequency = self.sampling_freq_spinBox.value()
         reconstruction_obj = SignalReconstruction(sampled_data, sampling_frequency, self.signal.linspace)
         reconstruction_data = reconstruction_obj.reconstruct_signal(selected_technique)
 

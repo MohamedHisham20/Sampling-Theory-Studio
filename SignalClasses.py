@@ -116,7 +116,7 @@ class Signal:
         self.frequency_components.remove(removed_component)
 
     # --------------------------------------------------------
-    def get_data_points(self, with_noise=True, sampling_frequency_multiplier=2):
+    def get_data_points(self, with_noise=True, sampling_frequency=1):
         # Can change this to return the needed data points type
         if self.signal_type == Signal.COMPOSED:
             data_points = np.sum([
@@ -137,7 +137,7 @@ class Signal:
             noise = np.random.normal(0, np.sqrt(noise_power), len(data_points))
             data_points += noise
 
-        sampling_period = 1 / (self.get_maximum_frequency() * sampling_frequency_multiplier)
+        sampling_period = 1 / (sampling_frequency)
         sampling_linspace = np.arange(self.linspace_start, self.linspace_stop, sampling_period)
 
         sampled_data = np.interp(sampling_linspace, self.linspace, data_points)

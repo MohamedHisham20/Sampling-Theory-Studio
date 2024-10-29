@@ -2287,7 +2287,7 @@ PlotWidget {
                     </size>
                    </property>
                    <property name="text">
-                    <string>80</string>
+                    <string>30</string>
                    </property>
                    <property name="alignment">
                     <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>

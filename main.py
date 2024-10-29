@@ -1,3 +1,5 @@
+import sys
+
 import numpy as np
 from PySide6.QtGui import QIcon
 from PySide6.QtUiTools import QUiLoader
@@ -35,13 +37,13 @@ class SamplingStudio(QMainWindow):
         # Frequency Slider
         self.freq_slider = self.ui.findChild(QSlider, "compose_freq_slider")
         self.freq_slider.setMinimum(1)
-        self.freq_slider.setMaximum(80)
-        self.freq_slider.setValue(30)
+        self.freq_slider.setMaximum(30)
+        self.freq_slider.setValue(1)
         # controls_layout.addWidget(QLabel("Frequency:"))
         # controls_layout.addWidget(self.freq_slider)
 
         self.frequency_label = self.ui.findChild(QLabel, "compose_hz_label")
-        self.frequency_label.setText("30 Hz")
+        self.frequency_label.setText("1 Hz")
 
         # Phase slider
         self.phase_slider = self.ui.findChild(QSlider, "compose_phase_slider")
@@ -78,13 +80,12 @@ class SamplingStudio(QMainWindow):
 
         # Sampling frequency slider
         self.sampling_freq_combobox = self.ui.findChild(QComboBox, "sampling_freq_comboBox")
-        self.sampling_freq_combobox.addItem("0.25", 0.25)
         self.sampling_freq_combobox.addItem("0.5", 0.5)
         self.sampling_freq_combobox.addItem("1", 1)
         self.sampling_freq_combobox.addItem("2", 2)
-        self.sampling_freq_combobox.addItem("5", 5)
-        self.sampling_freq_combobox.addItem("10", 10)
-        self.sampling_freq_combobox.setCurrentIndex(3)
+        self.sampling_freq_combobox.addItem("3", 3)
+        self.sampling_freq_combobox.addItem("4", 4)
+        self.sampling_freq_combobox.setCurrentIndex(2)
         # self.sampling_freq_slider = QSlider(QtCore.Qt.Horizontal)
         # self.sampling_freq_slider.setMinimum(1)
         # self.sampling_freq_slider.setMaximum(10)
@@ -154,7 +155,7 @@ class SamplingStudio(QMainWindow):
 
         # Timer for real-time updates
         self.timer = QtCore.QTimer()
-        self.timer.setInterval(1000)
+        self.timer.setInterval(100)
         self.timer.timeout.connect(self.plot_signal)
         self.timer.start()
 
@@ -246,10 +247,7 @@ class SamplingStudio(QMainWindow):
         #DFT Magnitude Plot
         og_sampling_frequency = 1 / (self.signal.linspace[1]-self.signal.linspace[0])
         
-        self.DFTGraph.draw_DFT_magnitude(data_pnts=data_points,
-        og_sampling_frequency=og_sampling_frequency,
-        reconstruction_sampling_frequency=sampling_frequency,
-        signal_freq_components=self.signal.frequency_components)
+        self.DFTGraph.draw_DFT_magnitude(data_points, og_sampling_frequency, sampling_frequency, False)
 
     def get_snr(self):
         value = self.snr_slider.value()

@@ -28,10 +28,10 @@ class Signal:
         self.frequency_components = []
         self.signal_type = Signal.COMPOSED
         self.linspace_start = 0
-        self.linspace_stop = 10
-        self.linspace = np.linspace(self.linspace_start, self.linspace_stop, 5_000)
+        self.linspace_stop = 1
+        self.linspace = np.linspace(self.linspace_start, self.linspace_stop, 1_000)
         self.SNR = Signal.MAXIMUM_SNR
-        self.active_component = SignalComponent(30, 1, 0)
+        self.active_component = SignalComponent(1, 1, 0)
         self.maximum_frequency = 0
 
     @staticmethod

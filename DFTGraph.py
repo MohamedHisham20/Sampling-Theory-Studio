@@ -1,6 +1,5 @@
 import pyqtgraph as pg
 import numpy as np
-from typing import List
 
 
 class DFTGraph():
@@ -43,7 +42,7 @@ class DFTGraph():
         filtered_FFT_magnitude = filtered_FFT_magnitude[sorted_indices]
 
         # Plot the FFT result within the specified margin
-        self.DFT_plot_widget.plotItem.plot(filtered_fo, filtered_FFT_magnitude)
+        self.DFT_plot_widget.plotItem.plot(fo, FFT_magnitude)
 
         if show_repetitions:
             impulse_magnitude = max(FFT_magnitude)

@@ -127,7 +127,7 @@ class Signal:
         else:
             data_points = self.data_points
 
-        if len(data_points) == 0:
+        if self.signal_type == self.FROM_FILE and len(data_points) == 0:
             return None, None, None
 
         if with_noise:
@@ -140,7 +140,9 @@ class Signal:
         sampling_period = 1 / (self.get_maximum_frequency() * sampling_frequency_multiplier)
         sampling_linspace = np.arange(self.linspace_start, self.linspace_stop, sampling_period)
 
-        return data_points, np.interp(sampling_linspace, self.linspace, self.data_points), sampling_linspace
+        sampled_data = np.interp(sampling_linspace, self.linspace, data_points)
+
+        return data_points, sampled_data, sampling_linspace
 
     def get_maximum_frequency(self):
         if self.signal_type == Signal.FROM_FILE:

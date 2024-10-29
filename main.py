@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from PySide6.QtGui import QIcon
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QPushButton, QLabel,
@@ -157,17 +158,16 @@ class SamplingStudio(QMainWindow):
 
     def export_signal(self):
         data_points, _, _ = self.signal.get_data_points(with_noise=False)
-        linspace_period = self.signal.linspace[1] - self.signal.linspace[0]
 
         # Prepare data to save, with the first row as the sampling period
-        data_to_save = np.vstack(([linspace_period], data_points))
+        df = pd.DataFrame({'Time': self.signal.linspace, 'Signal': data_points})
 
         # Save to CSV
         options = QFileDialog.Options()
-        file_path, _ = QFileDialog.getSaveFileName(None, "Save Signal Data", "", "CSV Files (*.csv);;All Files (*)",
+        file_path, _ = QFileDialog.getSaveFileName(self, "Save Signal Data", "", "CSV Files (*.csv);;All Files (*)",
                                                    options=options)
 
-        np.savetxt(file_path, data_to_save.T, delimiter=',', header='Sampling Period,Data Points', comments='')
+        df.to_csv(file_path, index=False)
 
 
     def change_signal_type(self):

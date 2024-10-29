@@ -192,7 +192,10 @@ class SamplingStudio(QMainWindow):
         
         #DFT Magnitude Plot
         og_sampling_frequency = 1 / (self.signal.linspace[1]-self.signal.linspace[0])
-        self.DFTGraph.draw_DFT_magnitude(data_pnts=data_points, sampling_frequency=og_sampling_frequency)
+        
+        self.DFTGraph.draw_DFT_magnitude(data_pnts=data_points, 
+        og_sampling_frequency=og_sampling_frequency, 
+        reconstruction_sampling_frequency=sampling_frequency)
 
 
 

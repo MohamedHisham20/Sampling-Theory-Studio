@@ -50,6 +50,12 @@ class DFTGraph():
         #     while pos_aliased_freq <= 640 and neg_aliased_freq >= -640:
         #         pos_aliased_freq = (f + reconstruction_sampling_frequency) * n
         #         neg_aliased_freq = (f - reconstruction_sampling_frequency) * n
+        #         self.DFT_plot_widget.plotItem.plot([pos_aliased_freq,pos_aliased_freq], [0, impulse_magnitude], pen="r")        
+        #         self.DFT_plot_widget.plotItem.plot([neg_aliased_freq,neg_aliased_freq], [0, impulse_magnitude], pen="r")
+        #         n+=1    
+        
+                
+                
         #         self.DFT_plot_widget.plotItem.plot([pos_aliased_freq,pos_aliased_freq], [0, impulse_magnitude], pen="r")
         #         self.DFT_plot_widget.plotItem.plot([neg_aliased_freq,neg_aliased_freq], [0, impulse_magnitude], pen="r")
         #         n+=1

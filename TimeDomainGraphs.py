@@ -46,6 +46,7 @@ class TimeDomainGraphs():
         if len(signal_data1) != len(signal_data2):
             print("Error: Signal lengths do not match.")
             return
-        difference = signal_data1 - signal_data2
+        # difference = signal_data1 - signal_data2
         self.difference_plot.clear()
-        self.difference_plot.plot(linspace, difference, pen='g', name='Difference')
+        self.difference_plot.plot(linspace, signal_data1, pen='g', name='Difference')
+        self.difference_plot.plot(linspace, signal_data2, pen='b')

@@ -2,6 +2,7 @@ import pyqtgraph as pg
 import numpy as np
 from typing import List
 
+
 class DFTGraph():
     def __init__(self):
         self.DFT_plot_widget = pg.PlotWidget()
@@ -26,16 +27,26 @@ class DFTGraph():
         impulse_magnitude = max(FFT_magnitude)
 
         sampling_frequency_impulses_linspace = np.concatenate([
-            np.arange(reconstruction_sampling_frequency / 2, -640, -reconstruction_sampling_frequency),
-            np.arange(-reconstruction_sampling_frequency / 2, 640, reconstruction_sampling_frequency)
+            np.arange(-reconstruction_sampling_frequency / 2, -640, -reconstruction_sampling_frequency),
+            np.arange(reconstruction_sampling_frequency / 2, 640, reconstruction_sampling_frequency)
         ])
+        positive_sampling_frquency_impulses_linspace = np.arange(-reconstruction_sampling_frequency / 2, 640, reconstruction_sampling_frequency)
+        negative_sampling_frequency_impulses_linspace = np.arange(reconstruction_sampling_frequency / 2, -640, -reconstruction_sampling_frequency)
 
-        for center_freq in sampling_frequency_impulses_linspace:
-            # Shift the FFT frequency axis by the center frequency
-            shifted_fo = fo + center_freq
-            # Plot the repeated FFT magnitude centered at the current frequency
-            self.DFT_plot_widget.plotItem.plot(shifted_fo, FFT_magnitude,
-                                               pen='b')  # Using blue for replicas for contrast
+        # for center_freq in sampling_frequency_impulses_linspace:
+        #     # Shift the FFT frequency axis by the center frequency
+        #     shifted_fo = fo + center_freq
+        #     # Plot the repeated FFT magnitude centered at the current frequency
+        #     self.DFT_plot_widget.plotItem.plot(shifted_fo, FFT_magnitude,
+        #                                        pen='b')  # Using blue for replicas for contrast
+
+        for center_freq in positive_sampling_frquency_impulses_linspace:
+            shifted_fo = fo + center_freq - reconstruction_sampling_frequency / 2
+            self.DFT_plot_widget.plotItem.plot(shifted_fo, FFT_magnitude, pen='b')
+
+        for center_freq in negative_sampling_frequency_impulses_linspace:
+            shifted_fo = fo + center_freq + reconstruction_sampling_frequency / 2
+            self.DFT_plot_widget.plotItem.plot(shifted_fo, FFT_magnitude, pen='b')
 
         # Plot impulses at each period location for reference
         for x in sampling_frequency_impulses_linspace:

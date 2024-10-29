@@ -154,7 +154,7 @@ class SamplingStudio(QMainWindow):
 
         # Timer for real-time updates
         self.timer = QtCore.QTimer()
-        self.timer.setInterval(100)
+        self.timer.setInterval(1000)
         self.timer.timeout.connect(self.plot_signal)
         self.timer.start()
 

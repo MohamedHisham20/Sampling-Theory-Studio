@@ -30,36 +30,14 @@ class DFTGraph():
             np.arange(-reconstruction_sampling_frequency / 2, 640, reconstruction_sampling_frequency)
         ])
 
+        for center_freq in sampling_frequency_impulses_linspace:
+            # Shift the FFT frequency axis by the center frequency
+            shifted_fo = fo + center_freq
+            # Plot the repeated FFT magnitude centered at the current frequency
+            self.DFT_plot_widget.plotItem.plot(shifted_fo, FFT_magnitude,
+                                               pen='b')  # Using blue for replicas for contrast
+
+        # Plot impulses at each period location for reference
         for x in sampling_frequency_impulses_linspace:
             self.DFT_plot_widget.plotItem.plot([x, x], [0, impulse_magnitude], pen='r')
-
-
-
-        #
-        # for i in range(len(data_pnts)):
-        #     if fo[i]==0: continue
-        #
-        #     #draw impulses at all multiples of the selected sampling frequency
-        #     if int(fo[i]) % reconstruction_sampling_frequency == 0:
-        #         self.DFT_plot_widget.plotItem.plot([fo[i], fo[i]], [0, impulse_magnitude], pen='r')
-        #
-        #
-        # # draw impulses for periodicities of signal components
-        # for f in signal_freq_components:
-        #     n  = 1
-        #     while pos_aliased_freq <= 640 and neg_aliased_freq >= -640:
-        #         pos_aliased_freq = (f + reconstruction_sampling_frequency) * n
-        #         neg_aliased_freq = (f - reconstruction_sampling_frequency) * n
-        #         self.DFT_plot_widget.plotItem.plot([pos_aliased_freq,pos_aliased_freq], [0, impulse_magnitude], pen="r")        
-        #         self.DFT_plot_widget.plotItem.plot([neg_aliased_freq,neg_aliased_freq], [0, impulse_magnitude], pen="r")
-        #         n+=1    
-        
-                
-                
-        #         self.DFT_plot_widget.plotItem.plot([pos_aliased_freq,pos_aliased_freq], [0, impulse_magnitude], pen="r")
-        #         self.DFT_plot_widget.plotItem.plot([neg_aliased_freq,neg_aliased_freq], [0, impulse_magnitude], pen="r")
-        #         n+=1
-        #
-        #
-        #
                 

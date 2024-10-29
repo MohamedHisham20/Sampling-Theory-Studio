@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-from typing import List
 
 
 class SignalComponent:
@@ -26,7 +25,7 @@ class Signal:
     # --------------------------------------------------------
     def __init__(self):
         self.data_points = np.array([])
-        self.frequency_components: List[int] = []
+        self.frequency_components = []
         self.signal_type = Signal.COMPOSED
         self.linspace_start = 0
         self.linspace_stop = 10
@@ -85,7 +84,7 @@ class Signal:
         return new_signal
 
     @staticmethod
-    def from_frequency_components(components: List[SignalComponent]):
+    def from_frequency_components(components: [SignalComponent]):
         new_signal = Signal()
         new_signal.signal_type = Signal.COMPOSED
         new_signal.frequency_components = components
@@ -128,7 +127,7 @@ class Signal:
         else:
             data_points = self.data_points
 
-        if len(data_points) == 0:
+        if self.signal_type == self.FROM_FILE and len(data_points) == 0:
             return None, None, None
 
         if with_noise:
@@ -140,8 +139,10 @@ class Signal:
 
         sampling_period = 1 / (self.get_maximum_frequency() * sampling_frequency_multiplier)
         sampling_linspace = np.arange(self.linspace_start, self.linspace_stop, sampling_period)
-        
-        return data_points, np.interp(sampling_linspace, self.linspace, self.data_points), sampling_linspace
+
+        sampled_data = np.interp(sampling_linspace, self.linspace, data_points)
+
+        return data_points, sampled_data, sampling_linspace
 
     def get_maximum_frequency(self):
         if self.signal_type == Signal.FROM_FILE:

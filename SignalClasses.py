@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from typing import List
 
 
 class SignalComponent:
@@ -25,7 +26,7 @@ class Signal:
     # --------------------------------------------------------
     def __init__(self):
         self.data_points = np.array([])
-        self.frequency_components = []
+        self.frequency_components: List[int] = []
         self.signal_type = Signal.COMPOSED
         self.linspace_start = 0
         self.linspace_stop = 10
@@ -84,7 +85,7 @@ class Signal:
         return new_signal
 
     @staticmethod
-    def from_frequency_components(components: [SignalComponent]):
+    def from_frequency_components(components: List[SignalComponent]):
         new_signal = Signal()
         new_signal.signal_type = Signal.COMPOSED
         new_signal.frequency_components = components
@@ -139,7 +140,7 @@ class Signal:
 
         sampling_period = 1 / (self.get_maximum_frequency() * sampling_frequency_multiplier)
         sampling_linspace = np.arange(self.linspace_start, self.linspace_stop, sampling_period)
-
+        
         return data_points, np.interp(sampling_linspace, self.linspace, self.data_points), sampling_linspace
 
     def get_maximum_frequency(self):

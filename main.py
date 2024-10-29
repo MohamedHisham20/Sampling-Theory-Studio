@@ -249,7 +249,8 @@ class SamplingStudio(QMainWindow):
         
         self.DFTGraph.draw_DFT_magnitude(data_pnts=data_points, 
         og_sampling_frequency=og_sampling_frequency, 
-        reconstruction_sampling_frequency=sampling_frequency)
+        reconstruction_sampling_frequency=sampling_frequency,
+        signal_freq_components=self.signal.frequency_components)
 
     def get_snr(self):
         value = self.snr_slider.value()

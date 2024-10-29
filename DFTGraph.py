@@ -26,12 +26,14 @@ class DFTGraph():
         impulse_magnitude = max(FFT_magnitude)
 
         sampling_frequency_impulses_linspace = np.concatenate([
-            np.arange(0, -640, -2 * reconstruction_sampling_frequency),
-            np.arange(0, 640, 2 * reconstruction_sampling_frequency)
+            np.arange(reconstruction_sampling_frequency / 2, -640, -reconstruction_sampling_frequency),
+            np.arange(-reconstruction_sampling_frequency / 2, 640, reconstruction_sampling_frequency)
         ])
 
         for x in sampling_frequency_impulses_linspace:
             self.DFT_plot_widget.plotItem.plot([x, x], [0, impulse_magnitude], pen='r')
+
+
 
         #
         # for i in range(len(data_pnts)):

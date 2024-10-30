@@ -66,11 +66,9 @@ class Signal:
         # Load data from CSV
         try:
             data = pd.read_csv(file_path)
-            # Ensure expected columns are present
             if 'Time' not in data.columns or data.columns[1] not in data.columns:
                 raise ValueError("CSV file must contain 'Time' and a second column for signal data.")
 
-            # Assign time and signal data to linspace and data_points
             new_signal.linspace = data['Time'].values
             new_signal.data_points = data.iloc[:, 1].values  # Use second column as data points
             new_signal.linspace_start = new_signal.linspace[0]

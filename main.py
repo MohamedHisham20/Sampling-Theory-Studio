@@ -77,6 +77,9 @@ class SamplingStudio(QMainWindow):
         self.show_samples_checkbox.setChecked(True)
         # controls_layout.addWidget(self.show_samples_checkbox)
 
+        self.show_repetitions_checkbox = self.ui.findChild(QCheckBox, "show_repetitions_checkBox")
+        self.show_repetitions_checkbox.setChecked(False)
+
         # Sampling frequency slider
         self.sampling_freq_spinBox = self.ui.findChild(QSpinBox, "sampling_freq_spinBox")
         self.sampling_freq_spinBox.setValue(2)
@@ -169,7 +172,6 @@ class SamplingStudio(QMainWindow):
 
         df.to_csv(file_path, index=False)
 
-
     def change_signal_type(self):
         index = self.tab_widget.currentIndex()
         if index == 0:
@@ -230,7 +232,8 @@ class SamplingStudio(QMainWindow):
 
     def plot_signal(self):
         with_noise = self.noise_checkbox.isChecked()
-        data_points, sampled_data, sample_linspace = self.signal.get_data_points(with_noise, self.sampling_freq_spinBox.value())
+        data_points, sampled_data, sample_linspace = self.signal.get_data_points(with_noise,
+                                                                                 self.sampling_freq_spinBox.value())
         if data_points is None:
             return
 
@@ -254,11 +257,12 @@ class SamplingStudio(QMainWindow):
 
         # Difference plot
         self.time_domain_graphs.draw_difference(self.signal.linspace, data_points, reconstruction_data)
-        
-        #DFT Magnitude Plot
-        og_sampling_frequency = 1 / (self.signal.linspace[1]-self.signal.linspace[0])
-        
-        self.DFTGraph.draw_DFT_magnitude(data_points, og_sampling_frequency, sampling_frequency, False)
+
+        # DFT Magnitude Plot
+        og_sampling_frequency = self.signal.linspace[1] - self.signal.linspace[0]
+
+        show_repetitions = self.show_repetitions_checkbox.isChecked()
+        self.DFTGraph.draw_DFT_magnitude(data_points, og_sampling_frequency, sampling_frequency, show_repetitions)
 
     def get_snr(self):
         value = self.snr_slider.value()

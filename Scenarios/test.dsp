@@ -1,0 +1,1 @@
+{"signal": {"components": [], "active_component": {"frequency": 17, "amplitude": 1.0, "phase": 0.0}}, "Noise": {"SNR": 100, "show": true}, "sampling": {"frequency": 6, "show": true, "repeat": false}, "reconstruction_method": 1002}

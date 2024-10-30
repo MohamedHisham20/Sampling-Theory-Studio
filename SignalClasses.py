@@ -12,6 +12,13 @@ class SignalComponent:
     def get_data_points(self, linspace):
         return self.amplitude * np.cos(2 * np.pi * self.frequency * linspace + self.phase)
 
+    def to_dict(self):
+        return {
+            "frequency": self.frequency,
+            "amplitude": self.amplitude,
+            "phase": self.phase
+        }
+
 
 class Signal:
     # Determining signal type
@@ -33,6 +40,20 @@ class Signal:
         self.SNR = Signal.MAXIMUM_SNR
         self.active_component = SignalComponent(2, 1, 0)
         self.maximum_frequency = 0
+
+    def to_dict(self):
+        return {
+            "components": [component.to_dict() for component in self.frequency_components],
+            "active_component": self.active_component.to_dict(),
+        }
+
+    @staticmethod
+    def from_dict(signal_dict):
+        new_signal = Signal()
+        new_signal.frequency_components = [SignalComponent(**component) for component in signal_dict["components"]]
+        new_signal.active_component = SignalComponent(**signal_dict["active_component"])
+        new_signal.maximum_frequency = new_signal.get_maximum_frequency()
+        return new_signal
 
     @staticmethod
     def find_maximum_frequency(data_points, sampling_rate):

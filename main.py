@@ -1,3 +1,4 @@
+import json
 import numpy as np
 import pandas as pd
 from PySide6.QtGui import QIcon
@@ -137,6 +138,10 @@ class SamplingStudio(QMainWindow):
 
         self.export_signal_button = self.ui.findChild(QPushButton, "save_signal_button")
 
+        self.save_scenario_button = self.ui.findChild(QPushButton, "save_scenario_button")
+
+        self.load_scenario_button = self.ui.findChild(QPushButton, "load_scenario_button")
+
         # Connect signals and slots
         self.add_button.clicked.connect(self.add_component)
         self.freq_slider.valueChanged.connect(self.update_active_component)
@@ -152,6 +157,8 @@ class SamplingStudio(QMainWindow):
         self.load_signal_button.clicked.connect(self.load_signal)
         self.tab_widget.currentChanged.connect(self.change_signal_type)
         self.export_signal_button.clicked.connect(self.export_signal)
+        self.save_scenario_button.clicked.connect(self.save_scenario)
+        self.load_scenario_button.clicked.connect(self.load_scenario)
 
         # Timer for real-time updates
         self.timer = QtCore.QTimer()
@@ -172,6 +179,53 @@ class SamplingStudio(QMainWindow):
 
         df.to_csv(file_path, index=False)
 
+    def load_scenario(self):
+        file_path = self.open_file_dialog(type="DSP")
+        if file_path is not None:
+            self.load_state(file_path)
+
+    def load_state(self, file_path):
+        with open(file_path, 'r') as file:
+            state_data = json.load(file)
+
+        self.signal = Signal.from_dict(state_data['signal'])
+        self.frequency_label.setText(str(self.signal.active_component.frequency) + " Hz")
+        self.freq_slider.setValue(self.signal.active_component.frequency)
+        self.snr_slider.setValue(int(state_data['Noise']['SNR']))
+        self.noise_checkbox.setChecked(state_data['Noise']['show'])
+        self.sampling_freq_spinBox.setValue(state_data['sampling']['frequency'])
+        self.show_samples_checkbox.setChecked(state_data['sampling']['show'])
+        self.show_repetitions_checkbox.setChecked(state_data['sampling']['repeat'])
+        self.reconstruction_method_combobox.setCurrentIndex(
+            self.reconstruction_method_combobox.findData(state_data['reconstruction_method'])
+        )
+        self.tab_widget.setCurrentIndex(0)
+        self.plot_signal()
+
+    def save_scenario(self):
+        # Save the current scenario to a file
+        options = QFileDialog.Options()
+        file_path, _ = QFileDialog.getSaveFileName(self, "Save Scenario", "", "Scenario Files (*.dsp);;All Files (*)",
+                                                    options=options)
+        self.save_state(file_path)
+
+    def save_state(self, file_path):
+        state_data = {
+            'signal': self.signal.to_dict(),
+            'Noise': {
+                'SNR': self.get_snr(),
+                'show': self.noise_checkbox.isChecked()
+            },
+            'sampling': {
+                'frequency': self.sampling_freq_spinBox.value(),
+                'show': self.show_samples_checkbox.isChecked(),
+                'repeat': self.show_repetitions_checkbox.isChecked()
+            },
+            'reconstruction_method': self.reconstruction_method_combobox.currentData(),
+        }
+        with open(file_path, 'w') as file:
+            json.dump(state_data, file)
+
     def change_signal_type(self):
         index = self.tab_widget.currentIndex()
         if index == 0:
@@ -187,10 +241,13 @@ class SamplingStudio(QMainWindow):
             if self.signal is not None:
                 self.plot_signal()
 
-    def open_file_dialog(self):
+    def open_file_dialog(self, type="CSV"):
         file_dialog = QFileDialog(self)
         file_dialog.setFileMode(QFileDialog.ExistingFile)
-        file_dialog.setNameFilter("CSV files (*.csv)")
+        if type == "CSV":
+            file_dialog.setNameFilter("CSV files (*.csv)")
+        elif type == "DSP":
+            file_dialog.setNameFilter("DSP files (*.dsp)")
         if file_dialog.exec():
             file_path = file_dialog.selectedFiles()[0]
             return file_path
@@ -269,7 +326,7 @@ class SamplingStudio(QMainWindow):
         if value <= 10:
             return value
         value = value - 9
-        return 10 ** value
+        return 10 * value
 
     def show_list_view(self):
         self.list_view_button.setEnabled(False)

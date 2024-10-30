@@ -1,3 +1,4 @@
+from PIL.ImageChops import offset
 from PySide6 import QtCore
 from PySide6.QtWidgets import QWidget, QVBoxLayout
 import pyqtgraph as pg
@@ -26,7 +27,8 @@ class TimeDomainGraphs:
         self.difference_plot.setTitle("Difference Plot")
         self.difference_plot.setLabel("bottom", "Time", units="s")
         self.difference_plot.setLabel("left", "Amplitude")
-        self.difference_plot.addLegend(offset=(-10, 10))
+        self.difference_plot_legend = pg.LegendItem(offset=(-10, 2))
+        self.difference_plot_legend.setParentItem(self.difference_plot.plotItem)
 
         # Link the plots for synchronized panning and zooming
         self.reconstruction_plot.setXLink(self.signal_plot)
@@ -54,6 +56,15 @@ class TimeDomainGraphs:
             return
         difference = signal_data1 - signal_data2
         self.difference_plot.clear()
-        self.difference_plot.plot(linspace, signal_data1, pen=self.original_pen, name='Original Signal')
-        self.difference_plot.plot(linspace, signal_data2, pen=self.reconstruction_pen, name='Reconstructed Signal')
-        self.difference_plot.plot(linspace, difference, pen=self.difference_pen, name='Difference')
+        self.difference_plot_legend.clear()
+        original_signal = pg.PlotDataItem(linspace, signal_data1, pen=self.original_pen)
+        reconstructed_signal = pg.PlotDataItem(linspace, signal_data2, pen=self.reconstruction_pen)
+        difference = pg.PlotDataItem(linspace, difference, pen=self.difference_pen)
+
+        self.difference_plot.addItem(original_signal)
+        self.difference_plot.addItem(reconstructed_signal)
+        self.difference_plot.addItem(difference)
+        self.difference_plot_legend.addItem(original_signal, "Original Signal")
+        self.difference_plot_legend.addItem(reconstructed_signal, "Reconstructed Signal")
+        self.difference_plot_legend.addItem(difference, "Difference")
+

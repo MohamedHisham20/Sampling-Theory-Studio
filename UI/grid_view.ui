@@ -2721,7 +2721,11 @@ PlotWidget {
              </widget>
             </item>
             <item>
-             <widget class="QSpinBox" name="sampling_freq_spinBox"/>
+             <widget class="QSpinBox" name="sampling_freq_spinBox">
+              <property name="maximum">
+               <number>200</number>
+              </property>
+             </widget>
             </item>
             <item>
              <widget class="QLabel" name="f_max_label">

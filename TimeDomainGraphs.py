@@ -1,6 +1,4 @@
-from PIL.ImageChops import offset
 from PySide6 import QtCore
-from PySide6.QtWidgets import QWidget, QVBoxLayout
 import pyqtgraph as pg
 
 

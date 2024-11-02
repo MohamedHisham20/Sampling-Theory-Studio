@@ -4,4 +4,5 @@
 test.py
 __pycache__/
 bodavenv/
-.DS_Store/
+.DS_Store
+claude_test.py

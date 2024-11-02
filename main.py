@@ -128,10 +128,10 @@ class SamplingStudio(QMainWindow):
         self.list_view_button.setIcon(QIcon("UI/list_view.png"))
         self.grid_view_button.setIcon(QIcon("UI/grid_view.png"))
 
-        self.ay_7aga = self.ui.findChild(QWidget, "ay_7aga")
+        self.graphs_container_widget = self.ui.findChild(QWidget, "ay_7aga")
         self.grid_layout = QGridLayout()
         self.show_grid_view()
-        self.ay_7aga.setLayout(self.grid_layout)
+        self.graphs_container_widget.setLayout(self.grid_layout)
 
         self.tab_widget = self.ui.findChild(QTabWidget, "tabWidget")
         self.load_signal_button = self.ui.findChild(QPushButton, "browse_csv_button")
@@ -155,16 +155,17 @@ class SamplingStudio(QMainWindow):
         self.list_view_button.clicked.connect(self.show_list_view)
         self.grid_view_button.clicked.connect(self.show_grid_view)
         self.load_signal_button.clicked.connect(self.load_signal)
-        self.tab_widget.currentChanged.connect(self.change_signal_type)
         self.export_signal_button.clicked.connect(self.export_signal)
         self.save_scenario_button.clicked.connect(self.save_scenario)
         self.load_scenario_button.clicked.connect(self.load_scenario)
 
-        # Timer for real-time updates
-        self.timer = QtCore.QTimer()
-        self.timer.setInterval(100)
-        self.timer.timeout.connect(self.plot_signal)
-        self.timer.start()
+        # Activate noise real-time interference with this
+        # self.timer = QtCore.QTimer()
+        # self.timer.setInterval(100)
+        # self.timer.timeout.connect(self.plot_signal)
+        # self.timer.start()
+
+        self.plot_signal()
 
     def export_signal(self):
         data_points, _, _ = self.signal.get_data_points(with_noise=False)
@@ -226,18 +227,16 @@ class SamplingStudio(QMainWindow):
         with open(file_path, 'w') as file:
             json.dump(state_data, file)
 
-    def change_signal_type(self):
-        index = self.tab_widget.currentIndex()
-        if index == 0:
-            self.signal.signal_type = Signal.COMPOSED
-        else:
-            self.signal.signal_type = Signal.FROM_FILE
-
     def load_signal(self):
         # open a file dialog, and load the signal from the selected file
         file_path = self.open_file_dialog()
         if file_path is not None:
             self.signal = Signal.from_file(file_path)
+            self.freq_slider.setValue(1)
+            self.phase_slider.setValue(0)
+            self.amplitude_input.setValue(0)
+            self.frequency_label.setText("1 Hz")
+            self.update_component_list()
             if self.signal is not None:
                 self.plot_signal()
 
@@ -304,7 +303,6 @@ class SamplingStudio(QMainWindow):
         selected_technique = self.reconstruction_method_combobox.currentData()
 
         # Perform reconstruction with the selected technique
-        maximum_frequency = self.signal.get_maximum_frequency()
         sampling_frequency = self.sampling_freq_spinBox.value()
         reconstruction_obj = SignalReconstruction(sampled_data, sampling_frequency, self.signal.linspace)
         reconstruction_data = reconstruction_obj.reconstruct_signal(selected_technique)

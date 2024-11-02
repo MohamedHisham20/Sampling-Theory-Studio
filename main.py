@@ -151,10 +151,12 @@ class SamplingStudio(QMainWindow):
         self.freq_slider.valueChanged.connect(self.update_active_component)
         self.phase_slider.valueChanged.connect(self.update_active_component)
         self.amplitude_input.textChanged.connect(self.update_active_component)
+        self.composition_sampling_freq_slider.valueChanged.connect(self.change_composition_sampling_frequency)
         self.snr_slider.valueChanged.connect(self.update_snr)
         self.noise_checkbox.stateChanged.connect(self.plot_signal)
         self.sampling_freq_spinBox.valueChanged.connect(self.plot_signal)
         self.reconstruction_method_combobox.currentIndexChanged.connect(self.plot_signal)
+        self.show_repetitions_checkbox.stateChanged.connect(self.plot_signal)
         self.components_list.itemDoubleClicked.connect(self.remove_component)
         self.list_view_button.clicked.connect(self.show_list_view)
         self.grid_view_button.clicked.connect(self.show_grid_view)
@@ -162,7 +164,6 @@ class SamplingStudio(QMainWindow):
         self.export_signal_button.clicked.connect(self.export_signal)
         self.save_scenario_button.clicked.connect(self.save_scenario)
         self.load_scenario_button.clicked.connect(self.load_scenario)
-        self.composition_sampling_freq_slider.valueChanged.connect(self.change_composition_sampling_frequency)
 
         # Activate noise real-time interference with this
         # self.timer = QtCore.QTimer()
@@ -176,7 +177,7 @@ class SamplingStudio(QMainWindow):
         data_points, _, _ = self.signal.get_data_points(with_noise=False)
 
         # Prepare data to save, with the first row as the sampling period
-        df = pd.DataFrame({'Time': self.signal.linspace, 'Signal': data_points})
+        df = pd.DataFrame({'Time': self.linspace, 'Signal': data_points})
 
         # Save to CSV
         options = QFileDialog.Options()
@@ -262,7 +263,7 @@ class SamplingStudio(QMainWindow):
     def update_active_component(self):
         frequency = self.freq_slider.value()
         amplitude = float(self.amplitude_input.text())
-        phase = np.radians(self.phase_slider.value())
+        phase = self.phase_slider.value() / 8
         self.signal.update_active_component(frequency, amplitude, phase)
         self.plot_signal()
         string = str(frequency) + " Hz"

@@ -2353,7 +2353,7 @@ PlotWidget {
                   </size>
                  </property>
                  <property name="maximum">
-                  <number>200</number>
+                  <number>16</number>
                  </property>
                  <property name="singleStep">
                   <number>1</number>
@@ -2816,6 +2816,9 @@ PlotWidget {
             </item>
             <item>
              <widget class="QSpinBox" name="sampling_freq_spinBox">
+              <property name="minimum">
+               <number>1</number>
+              </property>
               <property name="maximum">
                <number>200</number>
               </property>

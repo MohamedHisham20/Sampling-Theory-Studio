@@ -7,10 +7,10 @@ class SignalComponent:
         self.frequency = frequency
         self.amplitude = amplitude
         self.phase = phase
-        self.label = f"{amplitude} * cos(2 * pi * {frequency} * t + {phase})"
+        self.label = f"{amplitude} * cos(2 * pi * {frequency} * t + {phase} * pi)"
 
     def get_data_points(self, linspace):
-        return self.amplitude * np.cos(2 * np.pi * self.frequency * linspace + self.phase)
+        return self.amplitude * np.cos(2 * np.pi * self.frequency * linspace + self.phase * np.pi)
 
     def to_dict(self):
         return {
@@ -46,7 +46,11 @@ class Signal:
             "active_component": self.active_component.to_dict(),
             "file_path": self.file_path,
             "signal_type": self.signal_type,
-            "linspace": self.linspace,
+            "linspace": {
+                "start": self.linspace[0],
+                "stop": self.linspace[-1],
+                "step": self.linspace[1] - self.linspace[0]
+            }
         }
 
     @staticmethod
@@ -58,7 +62,10 @@ class Signal:
         new_signal.frequency_components = [SignalComponent(**component) for component in signal_dict["components"]]
         new_signal.active_component = SignalComponent(**signal_dict["active_component"])
         new_signal.signal_type = signal_dict["signal_type"]
-        new_signal.linspace = signal_dict["linspace"]
+        linspace_start = signal_dict["linspace"]["start"]
+        linspace_stop = signal_dict["linspace"]["stop"]
+        linspace_step = signal_dict["linspace"]["step"]
+        new_signal.linspace = np.arange(linspace_start, linspace_stop, linspace_step)
         return new_signal
 
     @staticmethod

@@ -1,3 +1,4 @@
+import os.path
 import numpy as np
 import pandas as pd
 
@@ -56,7 +57,8 @@ class Signal:
     @staticmethod
     def from_dict(signal_dict):
         if signal_dict["file_path"]:
-            new_signal = Signal.from_file(signal_dict["file_path"])
+            complete_path = os.path.join(os.getcwd(), signal_dict["file_path"])
+            new_signal = Signal.from_file(complete_path)
         else:
             new_signal = Signal()
         new_signal.frequency_components = [SignalComponent(**component) for component in signal_dict["components"]]
@@ -85,7 +87,8 @@ class Signal:
             new_signal.linspace_start = new_signal.linspace[0]
             new_signal.linspace_stop = new_signal.linspace[-1]
             new_signal.active_component = SignalComponent(0, 0, 0)
-            new_signal.file_path = file_path
+            path_from_current_working_directory = os.path.relpath(file_path, os.getcwd())
+            new_signal.file_path = path_from_current_working_directory
 
         except Exception as e:
             print(f"Error loading file: {e}")

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1080</width>
-    <height>720</height>
+    <width>1169</width>
+    <height>794</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -2461,6 +2461,117 @@ PlotWidget {
             </layout>
            </item>
            <item>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QLabel" name="sampling_freq_label_2">
+               <property name="text">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Composition Sampling&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Frequency&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="compose_sampling_frequency_complex">
+               <item>
+                <widget class="QSlider" name="compose_sampling_frequency_slider">
+                 <property name="maximumSize">
+                  <size>
+                   <width>2000</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="minimum">
+                  <number>10</number>
+                 </property>
+                 <property name="maximum">
+                  <number>190</number>
+                 </property>
+                 <property name="singleStep">
+                  <number>5</number>
+                 </property>
+                 <property name="value">
+                  <number>100</number>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
+                 </property>
+                 <property name="tickPosition">
+                  <enum>QSlider::TickPosition::TicksBelow</enum>
+                 </property>
+                 <property name="tickInterval">
+                  <number>0</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="compose_sampling_frequency_labels">
+                 <item>
+                  <widget class="QLabel" name="phase_label_1">
+                   <property name="text">
+                    <string>100</string>
+                   </property>
+                   <property name="indent">
+                    <number>0</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="phase_label_pi_2">
+                   <property name="text">
+                    <string>1k</string>
+                   </property>
+                   <property name="indent">
+                    <number>6</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="phase_label_2_pi_2">
+                   <property name="maximumSize">
+                    <size>
+                     <width>30</width>
+                     <height>16777215</height>
+                    </size>
+                   </property>
+                   <property name="toolTipDuration">
+                    <number>-1</number>
+                   </property>
+                   <property name="layoutDirection">
+                    <enum>Qt::LayoutDirection::LeftToRight</enum>
+                   </property>
+                   <property name="lineWidth">
+                    <number>0</number>
+                   </property>
+                   <property name="text">
+                    <string>10k</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+                   </property>
+                   <property name="indent">
+                    <number>0</number>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="QLabel" name="composition_sampling_frequency_label">
+               <property name="text">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt; vertical-align:sub;&quot;&gt;Hz&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <property name="textFormat">
+                <enum>Qt::TextFormat::MarkdownText</enum>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
             <widget class="QPushButton" name="add_component_button">
              <property name="text">
               <string>Add Component</string>
@@ -2480,7 +2591,7 @@ PlotWidget {
           <attribute name="title">
            <string>Load Files</string>
           </attribute>
-          <widget class="QWidget" name="">
+          <widget class="QWidget" name="layoutWidget">
            <property name="geometry">
             <rect>
              <x>12</x>
@@ -2699,7 +2810,7 @@ PlotWidget {
             <item>
              <widget class="QLabel" name="sampling_freq_label">
               <property name="text">
-               <string>Sampling Frequency</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reconstruction Sampling&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Frequency&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
              </widget>
             </item>
@@ -2779,19 +2890,6 @@ PlotWidget {
           <string>Save Scenario</string>
          </property>
         </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Orientation::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
@@ -2883,7 +2981,7 @@ PlotWidget {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1080</width>
+     <width>1169</width>
      <height>31</height>
     </rect>
    </property>

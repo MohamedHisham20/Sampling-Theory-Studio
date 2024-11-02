@@ -33,6 +33,11 @@ class SamplingStudio(QMainWindow):
         # layout = QVBoxLayout(central_widget)  # Set layout for the central widget
         # controls_layout = QHBoxLayout()
 
+        # Composition sampling frequency
+        self.composition_sampling_freq_slider = self.ui.findChild(QSlider, "compose_sampling_frequency_slider")
+        self.composition_sampling_freq_label = self.ui.findChild(QLabel, "composition_sampling_frequency_label")
+        self.linspace = np.linspace(0, 4, 4000)
+
         # Frequency Slider
         self.freq_slider = self.ui.findChild(QSlider, "compose_freq_slider")
         self.freq_slider.setMinimum(1)
@@ -157,6 +162,7 @@ class SamplingStudio(QMainWindow):
         self.export_signal_button.clicked.connect(self.export_signal)
         self.save_scenario_button.clicked.connect(self.save_scenario)
         self.load_scenario_button.clicked.connect(self.load_scenario)
+        self.composition_sampling_freq_slider.valueChanged.connect(self.change_composition_sampling_frequency)
 
         # Activate noise real-time interference with this
         # self.timer = QtCore.QTimer()
@@ -287,13 +293,13 @@ class SamplingStudio(QMainWindow):
 
     def plot_signal(self):
         with_noise = self.noise_checkbox.isChecked()
-        data_points, sampled_data, sample_linspace = self.signal.get_data_points(with_noise,
+        data_points, sampled_data, sample_linspace = self.signal.get_data_points(self.linspace, with_noise,
                                                                                  self.sampling_freq_spinBox.value())
         if data_points is None:
             return
 
         # Plot the original signal
-        self.time_domain_graphs.draw_signal(self.signal.linspace, data_points)
+        self.time_domain_graphs.draw_signal(self.linspace, data_points)
 
         if self.show_samples_checkbox.isChecked():
             self.time_domain_graphs.draw_samples(sample_linspace, sampled_data)
@@ -303,17 +309,17 @@ class SamplingStudio(QMainWindow):
 
         # Perform reconstruction with the selected technique
         sampling_frequency = self.sampling_freq_spinBox.value()
-        reconstruction_obj = SignalReconstruction(sampled_data, sampling_frequency, self.signal.linspace)
+        reconstruction_obj = SignalReconstruction(sampled_data, sampling_frequency, self.linspace)
         reconstruction_data = reconstruction_obj.reconstruct_signal(selected_technique)
 
         # Plot the reconstructed signal
-        self.time_domain_graphs.draw_reconstruction(self.signal.linspace, reconstruction_data)
+        self.time_domain_graphs.draw_reconstruction(self.linspace, reconstruction_data)
 
         # Difference plot
-        self.time_domain_graphs.draw_difference(self.signal.linspace, data_points, reconstruction_data)
+        self.time_domain_graphs.draw_difference(self.linspace, data_points, reconstruction_data)
 
         # DFT Magnitude Plot
-        og_sampling_frequency = self.signal.linspace[1] - self.signal.linspace[0]
+        og_sampling_frequency = self.linspace[1] - self.linspace[0]
 
         show_repetitions = self.show_repetitions_checkbox.isChecked()
         self.DFTGraph.draw_DFT_magnitude(data_points, og_sampling_frequency, sampling_frequency, show_repetitions)
@@ -352,6 +358,23 @@ class SamplingStudio(QMainWindow):
         self.grid_layout.removeWidget(self.time_domain_graphs.reconstruction_plot)
         self.grid_layout.removeWidget(self.time_domain_graphs.difference_plot)
         self.grid_layout.removeWidget(self.DFTGraph.DFT_plot_widget)
+
+    def get_compose_sampling_frequency(self):
+        value = self.composition_sampling_freq_slider.value()
+        if value <= 100:
+            return value * 10
+        value = value - 90
+        return 100 * value
+
+    def change_composition_sampling_frequency(self):
+        sampling_frequency = self.get_compose_sampling_frequency()
+        if sampling_frequency <= 1000:
+            self.composition_sampling_freq_label.setText(f"{sampling_frequency} Hz")
+        else:
+            self.composition_sampling_freq_label.setText(f"{sampling_frequency / 1000} kHz")
+        sampling_period = 1 / sampling_frequency
+        self.linspace = np.arange(0, 4, sampling_period)
+        self.plot_signal()
 
 
 if __name__ == "__main__":

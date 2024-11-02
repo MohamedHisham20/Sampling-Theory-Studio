@@ -7,7 +7,6 @@ from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QPushButton, 
                                QListWidget, QSlider, QListWidgetItem, QCheckBox, QComboBox, QDoubleSpinBox,
                                QGridLayout, QTabWidget, QFileDialog, QSpinBox)
 from PySide6.QtCore import QFile
-from pyqtgraph.Qt import QtCore
 
 from SignalClasses import Signal
 from TimeDomainGraphs import TimeDomainGraphs

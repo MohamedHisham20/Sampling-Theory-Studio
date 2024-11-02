@@ -51,7 +51,6 @@ class Signal:
         new_signal = Signal()
         new_signal.frequency_components = [SignalComponent(**component) for component in signal_dict["components"]]
         new_signal.active_component = SignalComponent(**signal_dict["active_component"])
-        new_signal.maximum_frequency = new_signal.get_maximum_frequency()
         return new_signal
 
     @staticmethod

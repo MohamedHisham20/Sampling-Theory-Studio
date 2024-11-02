@@ -197,7 +197,6 @@ class SamplingStudio(QMainWindow):
         self.signal = Signal.from_dict(state_data['signal'])
         self.frequency_label.setText(str(self.signal.active_component.frequency) + " Hz")
         self.freq_slider.setValue(self.signal.active_component.frequency)
-        self.snr_slider.setValue(int(state_data['Noise']['SNR']))
         self.noise_checkbox.setChecked(state_data['Noise']['show'])
         self.sampling_freq_spinBox.setValue(state_data['sampling']['frequency'])
         self.show_samples_checkbox.setChecked(state_data['sampling']['show'])
@@ -205,6 +204,8 @@ class SamplingStudio(QMainWindow):
         self.reconstruction_method_combobox.setCurrentIndex(
             self.reconstruction_method_combobox.findData(state_data['reconstruction_method'])
         )
+        self.setSNR(int(state_data['Noise']['SNR']))
+        self.set_composition_sampling_frequency(state_data['composition_sampling_frequency'])
         self.tab_widget.setCurrentIndex(0)
         self.plot_signal()
 
@@ -228,6 +229,7 @@ class SamplingStudio(QMainWindow):
                 'repeat': self.show_repetitions_checkbox.isChecked()
             },
             'reconstruction_method': self.reconstruction_method_combobox.currentData(),
+            'composition_sampling_frequency': self.get_compose_sampling_frequency()
         }
         with open(file_path, 'w') as file:
             json.dump(state_data, file)
@@ -330,6 +332,20 @@ class SamplingStudio(QMainWindow):
             return value
         value = value - 9
         return 10 * value
+
+    def setSNR(self, value):
+        if value <= 10:
+            self.snr_slider.setValue(value)
+        else:
+            value = value / 10
+            self.snr_slider.setValue(value + 9)
+
+    def set_composition_sampling_frequency(self, value):
+        if value <= 1000:
+            self.composition_sampling_freq_slider.setValue(value / 10)
+        else:
+            value = value / 100
+            self.composition_sampling_freq_slider.setValue(value + 90)
 
     def show_list_view(self):
         self.list_view_button.setEnabled(False)

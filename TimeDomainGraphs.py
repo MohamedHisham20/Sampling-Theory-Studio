@@ -59,10 +59,10 @@ class TimeDomainGraphs:
         reconstructed_signal = pg.PlotDataItem(linspace, signal_data2, pen=self.reconstruction_pen)
         difference = pg.PlotDataItem(linspace, difference, pen=self.difference_pen)
 
-        self.difference_plot.addItem(original_signal)
-        self.difference_plot.addItem(reconstructed_signal)
+        # self.difference_plot.addItem(original_signal)
+        # self.difference_plot.addItem(reconstructed_signal)
         self.difference_plot.addItem(difference)
-        self.difference_plot_legend.addItem(original_signal, "Original Signal")
-        self.difference_plot_legend.addItem(reconstructed_signal, "Reconstructed Signal")
+        # self.difference_plot_legend.addItem(original_signal, "Original Signal")
+        # self.difference_plot_legend.addItem(reconstructed_signal, "Reconstructed Signal")
         self.difference_plot_legend.addItem(difference, "Difference")
 

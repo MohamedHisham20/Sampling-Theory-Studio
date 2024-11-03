@@ -34,8 +34,8 @@ class SamplingStudio(QMainWindow):
         # controls_layout = QHBoxLayout()
 
         # Composition sampling frequency
-        self.composition_sampling_freq_slider = self.ui.findChild(QSlider, "compose_sampling_frequency_slider")
-        self.composition_sampling_freq_label = self.ui.findChild(QLabel, "composition_sampling_frequency_label")
+        # self.composition_sampling_freq_slider = self.ui.findChild(QSlider, "compose_sampling_frequency_slider")
+        # self.composition_sampling_freq_label = self.ui.findChild(QLabel, "composition_sampling_frequency_label")
         self.linspace = np.linspace(0, 4, 4000)
 
         # Frequency Slider
@@ -151,7 +151,7 @@ class SamplingStudio(QMainWindow):
         self.freq_slider.valueChanged.connect(self.update_active_component)
         self.phase_slider.valueChanged.connect(self.update_active_component)
         self.amplitude_input.textChanged.connect(self.update_active_component)
-        self.composition_sampling_freq_slider.valueChanged.connect(self.change_composition_sampling_frequency)
+        # self.composition_sampling_freq_slider.valueChanged.connect(self.change_composition_sampling_frequency)
         self.snr_slider.valueChanged.connect(self.update_snr)
         self.noise_checkbox.stateChanged.connect(self.plot_signal)
         self.sampling_freq_spinBox.valueChanged.connect(self.plot_signal)
@@ -174,7 +174,7 @@ class SamplingStudio(QMainWindow):
         self.plot_signal()
 
     def export_signal(self):
-        data_points, _, _ = self.signal.get_data_points(with_noise=False)
+        data_points, _, _ = self.signal.get_data_points(self.linspace, with_noise=False)
 
         # Prepare data to save, with the first row as the sampling period
         df = pd.DataFrame({'Time': self.linspace, 'Signal': data_points})
@@ -206,8 +206,9 @@ class SamplingStudio(QMainWindow):
             self.reconstruction_method_combobox.findData(state_data['reconstruction_method'])
         )
         self.setSNR(int(state_data['Noise']['SNR']))
-        self.set_composition_sampling_frequency(state_data['composition_sampling_frequency'])
+        # self.set_composition_sampling_frequency(state_data['composition_sampling_frequency'])
         self.tab_widget.setCurrentIndex(0)
+        self.update_component_list()
         self.plot_signal()
 
     def save_scenario(self):
@@ -230,7 +231,7 @@ class SamplingStudio(QMainWindow):
                 'repeat': self.show_repetitions_checkbox.isChecked()
             },
             'reconstruction_method': self.reconstruction_method_combobox.currentData(),
-            'composition_sampling_frequency': self.get_compose_sampling_frequency()
+            # 'composition_sampling_frequency': self.get_compose_sampling_frequency()
         }
         with open(file_path, 'w') as file:
             json.dump(state_data, file)
@@ -341,12 +342,12 @@ class SamplingStudio(QMainWindow):
             value = value / 10
             self.snr_slider.setValue(value + 9)
 
-    def set_composition_sampling_frequency(self, value):
-        if value <= 1000:
-            self.composition_sampling_freq_slider.setValue(value / 10)
-        else:
-            value = value / 100
-            self.composition_sampling_freq_slider.setValue(value + 90)
+    # def set_composition_sampling_frequency(self, value):
+    #     if value <= 1000:
+    #         self.composition_sampling_freq_slider.setValue(value / 10)
+    #     else:
+    #         value = value / 100
+    #         self.composition_sampling_freq_slider.setValue(value + 90)
 
     def show_list_view(self):
         self.list_view_button.setEnabled(False)
@@ -376,22 +377,22 @@ class SamplingStudio(QMainWindow):
         self.grid_layout.removeWidget(self.time_domain_graphs.difference_plot)
         self.grid_layout.removeWidget(self.DFTGraph.DFT_plot_widget)
 
-    def get_compose_sampling_frequency(self):
-        value = self.composition_sampling_freq_slider.value()
-        if value <= 100:
-            return value * 10
-        value = value - 90
-        return 100 * value
+    # def get_compose_sampling_frequency(self):
+    #     value = self.composition_sampling_freq_slider.value()
+    #     if value <= 100:
+    #         return value * 10
+    #     value = value - 90
+    #     return 100 * value
 
-    def change_composition_sampling_frequency(self):
-        sampling_frequency = self.get_compose_sampling_frequency()
-        if sampling_frequency <= 1000:
-            self.composition_sampling_freq_label.setText(f"{sampling_frequency} Hz")
-        else:
-            self.composition_sampling_freq_label.setText(f"{sampling_frequency / 1000} kHz")
-        sampling_period = 1 / sampling_frequency
-        self.linspace = np.arange(0, 4, sampling_period)
-        self.plot_signal()
+    # def change_composition_sampling_frequency(self):
+    #     sampling_frequency = self.get_compose_sampling_frequency()
+    #     if sampling_frequency <= 1000:
+    #         self.composition_sampling_freq_label.setText(f"{sampling_frequency} Hz")
+    #     else:
+    #         self.composition_sampling_freq_label.setText(f"{sampling_frequency / 1000} kHz")
+    #     sampling_period = 1 / sampling_frequency
+    #     self.linspace = np.arange(0, 4, sampling_period)
+    #     self.plot_signal()
 
 
 if __name__ == "__main__":

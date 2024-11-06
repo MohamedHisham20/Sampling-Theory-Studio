@@ -2590,8 +2590,11 @@ PlotWidget {
                   <height>16777215</height>
                  </size>
                 </property>
+                <property name="minimum">
+                 <number>1</number>
+                </property>
                 <property name="maximum">
-                 <number>19</number>
+                 <number>20</number>
                 </property>
                 <property name="orientation">
                  <enum>Qt::Orientation::Horizontal</enum>
@@ -2639,7 +2642,7 @@ PlotWidget {
                 <item>
                  <widget class="QLabel" name="snr_label_50">
                   <property name="text">
-                   <string>50</string>
+                   <string>15</string>
                   </property>
                  </widget>
                 </item>
@@ -2661,7 +2664,7 @@ PlotWidget {
                    <enum>Qt::LayoutDirection::RightToLeft</enum>
                   </property>
                   <property name="text">
-                   <string>100</string>
+                   <string>20</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>

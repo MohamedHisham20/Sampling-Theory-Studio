@@ -36,7 +36,7 @@ class TimeDomainGraphs:
     def draw_signal(self, linspace, data_points):
         """Draws a continuous signal in the signal plot."""
         self.signal_plot.clear()
-        self.signal_plot.plot(linspace, data_points, pen=self.original_pen, name='Signal')
+        self.signal_plot.plot(linspace, data_points, pen=self.original_pen, symbol='o', name='Signal')
 
     def draw_samples(self, linspace, sampled_data):
         """Draws samples as 'x' markers in the signal plot."""

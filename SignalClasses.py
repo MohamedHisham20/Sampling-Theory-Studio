@@ -34,8 +34,8 @@ class Signal:
         self.frequency_components = []
         self.signal_type = None
         self.linspace_start = 0
-        self.linspace_stop = 4
-        self.linspace = np.linspace(self.linspace_start, self.linspace_stop, 4000)
+        self.linspace_stop = 5
+        self.linspace = np.linspace(self.linspace_start, self.linspace_stop, 10_000)
         self.data_points = np.zeros_like(self.linspace)
         self.SNR = Signal.MAXIMUM_SNR
         self.active_component = SignalComponent(2, 1, 0)
@@ -50,7 +50,7 @@ class Signal:
             "linspace": {
                 "start": self.linspace[0],
                 "stop": self.linspace[-1],
-                "step": self.linspace[1] - self.linspace[0]
+                "len": len(self.linspace)
             }
         }
 
@@ -66,8 +66,8 @@ class Signal:
         new_signal.signal_type = signal_dict["signal_type"]
         linspace_start = signal_dict["linspace"]["start"]
         linspace_stop = signal_dict["linspace"]["stop"]
-        linspace_step = signal_dict["linspace"]["step"]
-        new_signal.linspace = np.arange(linspace_start, linspace_stop, linspace_step)
+        linspace_len = signal_dict["linspace"]["len"]
+        new_signal.linspace = np.linspace(linspace_start, linspace_stop, linspace_len)
         return new_signal
 
     @staticmethod
@@ -131,16 +131,18 @@ class Signal:
         if self.active_component.amplitude != 0:
             data_points += self.active_component.get_data_points(linspace)
 
+        noise = np.zeros_like(data_points)
+
         if with_noise:
             # SNR = 10 * log10(P_signal / P_noise)
             signal_power = np.sum(data_points ** 2) / len(data_points)
             noise_power = signal_power / (10 ** (self.SNR / 10))
             noise = np.random.normal(0, np.sqrt(noise_power), len(data_points))
-            data_points += noise
+            # data_points += noise
 
-        sampling_period = 1 / (sampling_frequency)
+        sampling_period = 1 / sampling_frequency
         sampling_linspace = np.arange(self.linspace_start, self.linspace_stop, sampling_period)
 
-        sampled_data = np.interp(sampling_linspace, linspace, data_points)
+        sampled_data = np.interp(sampling_linspace, linspace, data_points + noise)
 
-        return data_points, sampled_data, sampling_linspace
+        return data_points, sampled_data, sampling_linspace, noise

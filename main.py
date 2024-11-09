@@ -36,7 +36,7 @@ class SamplingStudio(QMainWindow):
         # Composition sampling frequency
         # self.composition_sampling_freq_slider = self.ui.findChild(QSlider, "compose_sampling_frequency_slider")
         # self.composition_sampling_freq_label = self.ui.findChild(QLabel, "composition_sampling_frequency_label")
-        self.linspace = np.linspace(0, 5, 10_000)
+        self.plotting_linspace = np.linspace(0, 5, 5_000)
 
         # Frequency Slider
         self.freq_slider = self.ui.findChild(QSlider, "compose_freq_slider")
@@ -174,10 +174,10 @@ class SamplingStudio(QMainWindow):
         self.plot_signal()
 
     def export_signal(self):
-        data_points, _, _, _ = self.signal.get_data_points(self.linspace, with_noise=False)
+        data_points, _, _, _ = self.signal.get_data_points(self.plotting_linspace, with_noise=False)
 
         # Prepare data to save, with the first row as the sampling period
-        df = pd.DataFrame({'Time': self.linspace, 'Signal': data_points})
+        df = pd.DataFrame({'Time': self.plotting_linspace, 'Signal': data_points})
 
         # Save to CSV
         options = QFileDialog.Options()
@@ -297,13 +297,13 @@ class SamplingStudio(QMainWindow):
 
     def plot_signal(self):
         with_noise = self.noise_checkbox.isChecked()
-        data_points, sampled_data, sample_linspace, noise = self.signal.get_data_points(self.linspace, with_noise,
+        data_points, sampled_data, sample_linspace, noise = self.signal.get_data_points(self.plotting_linspace, with_noise,
                                                                                         self.sampling_freq_spinBox.value())
         if data_points is None:
             return
 
         # Plot the original signal
-        self.time_domain_graphs.draw_signal(self.linspace, data_points + noise)
+        self.time_domain_graphs.draw_signal(self.plotting_linspace, data_points + noise)
 
         if self.show_samples_checkbox.isChecked():
             self.time_domain_graphs.draw_samples(sample_linspace, sampled_data)
@@ -313,17 +313,17 @@ class SamplingStudio(QMainWindow):
 
         # Perform reconstruction with the selected technique
         sampling_frequency = self.sampling_freq_spinBox.value()
-        reconstruction_obj = SignalReconstruction(sampled_data, sampling_frequency, self.linspace)
+        reconstruction_obj = SignalReconstruction(sampled_data, sampling_frequency, self.plotting_linspace)
         reconstruction_data = reconstruction_obj.reconstruct_signal(selected_technique)
 
         # Plot the reconstructed signal
-        self.time_domain_graphs.draw_reconstruction(self.linspace, reconstruction_data)
+        self.time_domain_graphs.draw_reconstruction(self.plotting_linspace, reconstruction_data)
 
         # Difference plot
-        self.time_domain_graphs.draw_difference(self.linspace, data_points, reconstruction_data)
+        self.time_domain_graphs.draw_difference(self.plotting_linspace, data_points, reconstruction_data)
 
         # DFT Magnitude Plot
-        og_sampling_frequency = self.linspace[1] - self.linspace[0]
+        og_sampling_frequency = self.plotting_linspace[1] - self.plotting_linspace[0]
 
         show_repetitions = self.show_repetitions_checkbox.isChecked()
         self.DFTGraph.draw_DFT_magnitude(data_points + noise, og_sampling_frequency, sampling_frequency, show_repetitions)

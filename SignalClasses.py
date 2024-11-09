@@ -35,7 +35,7 @@ class Signal:
         self.signal_type = None
         self.linspace_start = 0
         self.linspace_stop = 5
-        self.linspace = np.linspace(self.linspace_start, self.linspace_stop, 10_000)
+        self.linspace = np.linspace(self.linspace_start, self.linspace_stop, 5_000)
         self.data_points = np.zeros_like(self.linspace)
         self.SNR = Signal.MAXIMUM_SNR
         self.active_component = SignalComponent(2, 1, 0)

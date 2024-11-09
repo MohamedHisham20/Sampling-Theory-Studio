@@ -21,6 +21,16 @@ class SignalComponent:
         }
 
 
+class DataPointsObject:
+    def __init__(self):
+        self.plot_points = None
+        self.noise = None
+        self.all_samples = None
+        self.plot_samples = None
+        self.plot_samples_linspace = None
+        self.complete_linspace = None
+
+
 class Signal:
     # Determining signal type
     # --------------------------------------------------------
@@ -35,11 +45,14 @@ class Signal:
         self.signal_type = None
         self.linspace_start = 0
         self.linspace_stop = 5
-        self.linspace = np.linspace(self.linspace_start, self.linspace_stop, 5_000)
-        self.data_points = np.zeros_like(self.linspace)
+        self.plotting_linspace = np.linspace(self.linspace_start, self.linspace_stop, 10_000)
+        self.data_points = np.zeros_like(self.plotting_linspace)
         self.SNR = Signal.MAXIMUM_SNR
         self.active_component = SignalComponent(2, 1, 0)
         self.file_path = None
+        self.complete_linspace_start = -30
+        self.complete_linspace_stop = 35
+        self.sampling_origin_linspace = np.linspace(self.complete_linspace_start, self.complete_linspace_stop, 20_000)
 
     def to_dict(self):
         return {
@@ -47,10 +60,10 @@ class Signal:
             "active_component": self.active_component.to_dict(),
             "file_path": self.file_path,
             "signal_type": self.signal_type,
-            "linspace": {
-                "start": self.linspace[0],
-                "stop": self.linspace[-1],
-                "len": len(self.linspace)
+            "plotting_linspace": {
+                "start": self.plotting_linspace[0],
+                "stop": self.plotting_linspace[-1],
+                "len": len(self.plotting_linspace)
             }
         }
 
@@ -64,10 +77,10 @@ class Signal:
         new_signal.frequency_components = [SignalComponent(**component) for component in signal_dict["components"]]
         new_signal.active_component = SignalComponent(**signal_dict["active_component"])
         new_signal.signal_type = signal_dict["signal_type"]
-        linspace_start = signal_dict["linspace"]["start"]
-        linspace_stop = signal_dict["linspace"]["stop"]
-        linspace_len = signal_dict["linspace"]["len"]
-        new_signal.linspace = np.linspace(linspace_start, linspace_stop, linspace_len)
+        linspace_start = signal_dict["plotting_linspace"]["start"]
+        linspace_stop = signal_dict["plotting_linspace"]["stop"]
+        linspace_len = signal_dict["plotting_linspace"]["len"]
+        new_signal.plotting_linspace = np.linspace(linspace_start, linspace_stop, linspace_len)
         return new_signal
 
     @staticmethod
@@ -82,10 +95,10 @@ class Signal:
             if 'Time' not in data.columns or data.columns[1] not in data.columns:
                 raise ValueError("CSV file must contain 'Time' and a second column for signal data.")
 
-            new_signal.linspace = data['Time'].values
+            new_signal.plotting_linspace = data['Time'].values
             new_signal.data_points = data.iloc[:, 1].values  # Use second column as data points
-            new_signal.linspace_start = new_signal.linspace[0]
-            new_signal.linspace_stop = new_signal.linspace[-1]
+            new_signal.linspace_start = new_signal.plotting_linspace[0]
+            new_signal.linspace_stop = new_signal.plotting_linspace[-1]
             new_signal.active_component = SignalComponent(0, 0, 0)
             path_from_current_working_directory = os.path.relpath(file_path, os.getcwd())
             new_signal.file_path = path_from_current_working_directory
@@ -121,15 +134,20 @@ class Signal:
     # --------------------------------------------------------
     def get_data_points(self, linspace, with_noise=True, sampling_frequency=1):
         # Can change this to return the needed data points type
+        return_object = DataPointsObject()
         if self.signal_type == Signal.FROM_FILE:
-            # interpolate datapoints onto linspace
-            data_points = np.interp(linspace, self.linspace, self.data_points)
+            data_points = np.interp(linspace, self.plotting_linspace, self.data_points)
+            data_points += np.sum([component.get_data_points(linspace) for component in self.frequency_components],
+                                  axis=0)
+            if self.active_component.amplitude != 0:
+                data_points += self.active_component.get_data_points(linspace)
+            return_object.plot_points = data_points
         else:
-            data_points = np.zeros_like(linspace)
-        data_points += np.sum([component.get_data_points(linspace) for component in self.frequency_components],
-                              axis=0)
-        if self.active_component.amplitude != 0:
-            data_points += self.active_component.get_data_points(linspace)
+            data_points = np.sum([component.get_data_points(self.sampling_origin_linspace) for component in self.frequency_components],
+                                 axis=0)
+            if self.active_component.amplitude != 0:
+                data_points += self.active_component.get_data_points(self.sampling_origin_linspace)
+            return_object.plot_points = np.interp(linspace, self.sampling_origin_linspace, data_points)
 
         noise = np.zeros_like(data_points)
 
@@ -139,10 +157,23 @@ class Signal:
             noise_power = signal_power / (10 ** (self.SNR / 10))
             noise = np.random.normal(0, np.sqrt(noise_power), len(data_points))
             # data_points += noise
+        return_object.noise = np.interp(linspace, self.sampling_origin_linspace, noise)
 
         sampling_period = 1 / sampling_frequency
+        if self.signal_type == Signal.FROM_FILE:
+            all_samples_linspace = np.arange(self.linspace_start, self.linspace_stop, sampling_period)
+            points_linspace = linspace
+        else:
+            all_samples_linspace = np.arange(self.complete_linspace_start, self.complete_linspace_stop, sampling_period)
+            points_linspace = self.sampling_origin_linspace
+        all_samples = np.interp(all_samples_linspace, points_linspace, data_points + noise)
+        return_object.all_samples = all_samples
+
         sampling_linspace = np.arange(self.linspace_start, self.linspace_stop, sampling_period)
+        samples_to_plot = np.interp(sampling_linspace, linspace, return_object.plot_points + return_object.noise)
+        return_object.plot_samples = samples_to_plot
+        return_object.plot_samples_linspace = sampling_linspace
 
-        sampled_data = np.interp(sampling_linspace, linspace, data_points + noise)
+        return_object.complete_linspace = self.sampling_origin_linspace
 
-        return data_points, sampled_data, sampling_linspace, noise
+        return return_object

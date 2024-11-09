@@ -87,7 +87,9 @@ class SamplingStudio(QMainWindow):
 
         # Sampling frequency slider
         self.sampling_freq_spinBox = self.ui.findChild(QSpinBox, "sampling_freq_spinBox")
-        self.sampling_freq_spinBox.setValue(2)
+        self.sampling_freq_spinBox.setMinimum(5)
+        self.sampling_freq_spinBox.setMaximum(100)
+        self.sampling_freq_spinBox.setValue(6)
         # self.sampling_freq_slider = QSlider(QtCore.Qt.Horizontal)
         # self.sampling_freq_slider.setMinimum(1)
         # self.sampling_freq_slider.setMaximum(10)
@@ -154,6 +156,7 @@ class SamplingStudio(QMainWindow):
         # self.composition_sampling_freq_slider.valueChanged.connect(self.change_composition_sampling_frequency)
         self.snr_slider.valueChanged.connect(self.update_snr)
         self.noise_checkbox.stateChanged.connect(self.plot_signal)
+        self.show_samples_checkbox.stateChanged.connect(self.plot_signal)
         self.sampling_freq_spinBox.valueChanged.connect(self.plot_signal)
         self.reconstruction_method_combobox.currentIndexChanged.connect(self.plot_signal)
         self.show_repetitions_checkbox.stateChanged.connect(self.plot_signal)
@@ -165,6 +168,8 @@ class SamplingStudio(QMainWindow):
         self.save_scenario_button.clicked.connect(self.save_scenario)
         self.load_scenario_button.clicked.connect(self.load_scenario)
 
+        self.show_list_view()
+
         # Activate noise real-time interference with this
         # self.timer = QtCore.QTimer()
         # self.timer.setInterval(100)
@@ -174,7 +179,8 @@ class SamplingStudio(QMainWindow):
         self.plot_signal()
 
     def export_signal(self):
-        data_points, _, _, _ = self.signal.get_data_points(self.plotting_linspace, with_noise=False)
+        dataPointsObject = self.signal.get_data_points(self.plotting_linspace, with_noise=False)
+        data_points = dataPointsObject.plot_points
 
         # Prepare data to save, with the first row as the sampling period
         df = pd.DataFrame({'Time': self.plotting_linspace, 'Signal': data_points})
@@ -297,8 +303,16 @@ class SamplingStudio(QMainWindow):
 
     def plot_signal(self):
         with_noise = self.noise_checkbox.isChecked()
-        data_points, sampled_data, sample_linspace, noise = self.signal.get_data_points(self.plotting_linspace, with_noise,
-                                                                                        self.sampling_freq_spinBox.value())
+        data_points_object = self.signal.get_data_points(self.plotting_linspace, with_noise,
+                                                         self.sampling_freq_spinBox.value())
+
+        data_points = data_points_object.plot_points
+        noise = data_points_object.noise
+        sampled_data = data_points_object.plot_samples
+        sample_linspace = data_points_object.plot_samples_linspace
+        all_samples = data_points_object.all_samples
+        complete_linspace = data_points_object.complete_linspace
+
         if data_points is None:
             return
 
@@ -313,33 +327,30 @@ class SamplingStudio(QMainWindow):
 
         # Perform reconstruction with the selected technique
         sampling_frequency = self.sampling_freq_spinBox.value()
-        reconstruction_obj = SignalReconstruction(sampled_data, sampling_frequency, self.plotting_linspace)
+        reconstruction_obj = SignalReconstruction(all_samples, sampling_frequency, complete_linspace)
+        # returns the data points to be plotted from -7.5s to 12.5s
         reconstruction_data = reconstruction_obj.reconstruct_signal(selected_technique)
 
+        reconstruction_to_plot = np.interp(self.plotting_linspace, complete_linspace, reconstruction_data)
+
         # Plot the reconstructed signal
-        self.time_domain_graphs.draw_reconstruction(self.plotting_linspace, reconstruction_data)
+        self.time_domain_graphs.draw_reconstruction(self.plotting_linspace, reconstruction_to_plot)
 
         # Difference plot
-        self.time_domain_graphs.draw_difference(self.plotting_linspace, data_points, reconstruction_data)
+        self.time_domain_graphs.draw_difference(self.plotting_linspace, data_points, reconstruction_to_plot)
 
         # DFT Magnitude Plot
         og_sampling_frequency = self.plotting_linspace[1] - self.plotting_linspace[0]
 
         show_repetitions = self.show_repetitions_checkbox.isChecked()
-        self.DFTGraph.draw_DFT_magnitude(data_points + noise, og_sampling_frequency, sampling_frequency, show_repetitions)
+        self.DFTGraph.draw_DFT_magnitude(data_points + noise, og_sampling_frequency, sampling_frequency,
+                                         show_repetitions)
 
     def get_snr(self):
         return self.snr_slider.value()
 
     def setSNR(self, value):
         self.snr_slider.setValue(value)
-
-    # def set_composition_sampling_frequency(self, value):
-    #     if value <= 1000:
-    #         self.composition_sampling_freq_slider.setValue(value / 10)
-    #     else:
-    #         value = value / 100
-    #         self.composition_sampling_freq_slider.setValue(value + 90)
 
     def show_list_view(self):
         self.list_view_button.setEnabled(False)
@@ -368,23 +379,6 @@ class SamplingStudio(QMainWindow):
         self.grid_layout.removeWidget(self.time_domain_graphs.reconstruction_plot)
         self.grid_layout.removeWidget(self.time_domain_graphs.difference_plot)
         self.grid_layout.removeWidget(self.DFTGraph.DFT_plot_widget)
-
-    # def get_compose_sampling_frequency(self):
-    #     value = self.composition_sampling_freq_slider.value()
-    #     if value <= 100:
-    #         return value * 10
-    #     value = value - 90
-    #     return 100 * value
-
-    # def change_composition_sampling_frequency(self):
-    #     sampling_frequency = self.get_compose_sampling_frequency()
-    #     if sampling_frequency <= 1000:
-    #         self.composition_sampling_freq_label.setText(f"{sampling_frequency} Hz")
-    #     else:
-    #         self.composition_sampling_freq_label.setText(f"{sampling_frequency / 1000} kHz")
-    #     sampling_period = 1 / sampling_frequency
-    #     self.linspace = np.arange(0, 4, sampling_period)
-    #     self.plot_signal()
 
 
 if __name__ == "__main__":

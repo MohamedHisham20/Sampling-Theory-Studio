@@ -1,3 +1,4 @@
+import numpy as np
 from PySide6 import QtCore
 import pyqtgraph as pg
 
@@ -53,16 +54,24 @@ class TimeDomainGraphs:
             print("Error: Signal lengths do not match.")
             return
         difference = signal_data1 - signal_data2
+
         self.difference_plot.clear()
         self.difference_plot_legend.clear()
-        original_signal = pg.PlotDataItem(linspace, signal_data1, pen=self.original_pen)
-        reconstructed_signal = pg.PlotDataItem(linspace, signal_data2, pen=self.reconstruction_pen)
-        difference = pg.PlotDataItem(linspace, difference, pen=self.difference_pen)
+
+        # original_signal = pg.PlotDataItem(linspace, signal_data1, pen=self.original_pen)
+        # reconstructed_signal = pg.PlotDataItem(linspace, signal_data2, pen=self.reconstruction_pen)
+        difference_plot_item = pg.PlotDataItem(linspace, difference, pen=self.difference_pen)
 
         # self.difference_plot.addItem(original_signal)
         # self.difference_plot.addItem(reconstructed_signal)
-        self.difference_plot.addItem(difference)
+        self.difference_plot.addItem(difference_plot_item)
         # self.difference_plot_legend.addItem(original_signal, "Original Signal")
         # self.difference_plot_legend.addItem(reconstructed_signal, "Reconstructed Signal")
-        self.difference_plot_legend.addItem(difference, "Difference")
+        # self.difference_plot_legend.addItem(difference, "Difference")
 
+        root_mean_squared_error = np.sqrt(np.mean(difference ** 2))
+        rmse_text = f"RMSE: {root_mean_squared_error:.4f}"
+        rmse_text_item = pg.TextItem(rmse_text, color=(200, 50, 50), anchor=(0, 1))
+        rmse_text_item.setPos(linspace[0], np.max(difference))
+
+        self.difference_plot.addItem(rmse_text_item)

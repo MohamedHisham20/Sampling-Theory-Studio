@@ -50,9 +50,13 @@ class Signal:
         self.SNR = Signal.MAXIMUM_SNR
         self.active_component = SignalComponent(2, 1, 0)
         self.file_path = None
-        self.complete_linspace_start = -30
-        self.complete_linspace_stop = 35
-        self.sampling_origin_linspace = np.linspace(self.complete_linspace_start, self.complete_linspace_stop, 20_000)
+        self.complete_linspace_start = -70
+        self.complete_linspace_stop = 75
+        self.complete_linspace_len = (self.complete_linspace_stop - self.complete_linspace_start) * 2_000
+        self.sampling_origin_linspace = np.linspace(self.complete_linspace_start,
+                                                    self.complete_linspace_stop,
+                                                    self.complete_linspace_len)
+        self.base_noise = np.random.normal(0, 1, self.complete_linspace_len)
 
     def to_dict(self):
         return {
@@ -148,16 +152,22 @@ class Signal:
             if self.active_component.amplitude != 0:
                 data_points += self.active_component.get_data_points(self.sampling_origin_linspace)
             return_object.plot_points = np.interp(linspace, self.sampling_origin_linspace, data_points)
+            # return_object.plot_points = data_points
 
         noise = np.zeros_like(data_points)
 
         if with_noise:
             # SNR = 10 * log10(P_signal / P_noise)
+            print("required SNR: ", self.SNR)
             signal_power = np.sum(data_points ** 2) / len(data_points)
             noise_power = signal_power / (10 ** (self.SNR / 10))
-            noise = np.random.normal(0, np.sqrt(noise_power), len(data_points))
+            scaling_factor = np.sqrt(noise_power)
+            noise = self.base_noise * scaling_factor
+            noise_power = np.sum(noise ** 2) / len(noise)
+            print("achieved SNR:", 10 * np.log10(signal_power / noise_power))
             # data_points += noise
         return_object.noise = np.interp(linspace, self.sampling_origin_linspace, noise)
+        # return_object.noise = noise
 
         sampling_period = 1 / sampling_frequency
         if self.signal_type == Signal.FROM_FILE:
@@ -173,6 +183,8 @@ class Signal:
         samples_to_plot = np.interp(sampling_linspace, linspace, return_object.plot_points + return_object.noise)
         return_object.plot_samples = samples_to_plot
         return_object.plot_samples_linspace = sampling_linspace
+        # return_object.plot_samples = all_samples
+        # return_object.plot_samples_linspace = all_samples_linspace
 
         return_object.complete_linspace = self.sampling_origin_linspace
 

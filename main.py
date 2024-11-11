@@ -87,7 +87,7 @@ class SamplingStudio(QMainWindow):
 
         # Sampling frequency slider
         self.sampling_freq_spinBox = self.ui.findChild(QSpinBox, "sampling_freq_spinBox")
-        self.sampling_freq_spinBox.setMinimum(5)
+        self.sampling_freq_spinBox.setMinimum(2)
         self.sampling_freq_spinBox.setMaximum(100)
         self.sampling_freq_spinBox.setValue(6)
         # self.sampling_freq_slider = QSlider(QtCore.Qt.Horizontal)
@@ -182,7 +182,6 @@ class SamplingStudio(QMainWindow):
         dataPointsObject = self.signal.get_data_points(self.plotting_linspace, with_noise=False)
         data_points = dataPointsObject.plot_points
 
-        # Prepare data to save, with the first row as the sampling period
         df = pd.DataFrame({'Time': self.plotting_linspace, 'Signal': data_points})
 
         # Save to CSV
@@ -318,6 +317,7 @@ class SamplingStudio(QMainWindow):
 
         # Plot the original signal
         self.time_domain_graphs.draw_signal(self.plotting_linspace, data_points + noise)
+        # self.time_domain_graphs.draw_signal(complete_linspace, data_points + noise)
 
         if self.show_samples_checkbox.isChecked():
             self.time_domain_graphs.draw_samples(sample_linspace, sampled_data)
@@ -335,9 +335,11 @@ class SamplingStudio(QMainWindow):
 
         # Plot the reconstructed signal
         self.time_domain_graphs.draw_reconstruction(self.plotting_linspace, reconstruction_to_plot)
+        # self.time_domain_graphs.draw_reconstruction(complete_linspace, reconstruction_data)
 
         # Difference plot
         self.time_domain_graphs.draw_difference(self.plotting_linspace, data_points, reconstruction_to_plot)
+        # self.time_domain_graphs.draw_difference(complete_linspace, data_points, reconstruction_data)
 
         # DFT Magnitude Plot
         og_sampling_frequency = self.plotting_linspace[1] - self.plotting_linspace[0]

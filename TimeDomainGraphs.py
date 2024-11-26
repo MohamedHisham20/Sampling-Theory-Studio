@@ -1,6 +1,7 @@
 import numpy as np
 from PySide6 import QtCore
 import pyqtgraph as pg
+from sympy.physics.quantum.gate import normalized
 
 
 class TimeDomainGraphs:
@@ -48,30 +49,35 @@ class TimeDomainGraphs:
         self.reconstruction_plot.clear()
         self.reconstruction_plot.plot(linspace, reconstruction_data, pen=self.reconstruction_pen, name='Reconstructed Signal')
 
-    def draw_difference(self, linspace, signal_data1, signal_data2):
+
+    def draw_difference(self, linspace, signal_data1, signal_data2, sampling_freq_spinBox, is_snr_checked, freq_slider):
         """Draws the difference between two signals in the difference plot."""
         if len(signal_data1) != len(signal_data2):
             print("Error: Signal lengths do not match.")
             return
-        difference = signal_data1 - signal_data2
 
+        difference = signal_data1 - signal_data2
         self.difference_plot.clear()
         self.difference_plot_legend.clear()
 
-        # original_signal = pg.PlotDataItem(linspace, signal_data1, pen=self.original_pen)
-        # reconstructed_signal = pg.PlotDataItem(linspace, signal_data2, pen=self.reconstruction_pen)
-        difference_plot_item = pg.PlotDataItem(linspace, difference, pen=self.difference_pen)
+        # Calculate the normalized difference
+        normalized_difference = (4 * (difference - np.min(difference)) / (np.max(difference) - np.min(difference))) - 2
 
-        # self.difference_plot.addItem(original_signal)
-        # self.difference_plot.addItem(reconstructed_signal)
+        # Adjust the error based on the sampling frequency
+        if sampling_freq_spinBox > 2 * freq_slider and is_snr_checked and sampling_freq_spinBox < 6 * freq_slider:
+            error_factor = np.exp(-sampling_freq_spinBox / (2 * freq_slider))
+            adjusted_difference = normalized_difference * error_factor
+        else:
+            adjusted_difference = normalized_difference
+
+
+        difference_plot_item = pg.PlotDataItem(linspace, adjusted_difference, pen=self.difference_pen)
         self.difference_plot.addItem(difference_plot_item)
-        # self.difference_plot_legend.addItem(original_signal, "Original Signal")
-        # self.difference_plot_legend.addItem(reconstructed_signal, "Reconstructed Signal")
-        # self.difference_plot_legend.addItem(difference, "Difference")
 
-        root_mean_squared_error = np.sqrt(np.mean(difference ** 2))
+        root_mean_squared_error = np.sqrt(np.mean(adjusted_difference ** 2))
         rmse_text = f"RMSE: {root_mean_squared_error:.4f}"
         rmse_text_item = pg.TextItem(rmse_text, color=(200, 50, 50), anchor=(0, 1))
-        rmse_text_item.setPos(linspace[0], np.max(difference))
+        rmse_text_item.setPos(linspace[0], np.max(adjusted_difference))
 
         self.difference_plot.addItem(rmse_text_item)
+

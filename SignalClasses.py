@@ -50,8 +50,8 @@ class Signal:
         self.SNR = Signal.MAXIMUM_SNR
         self.active_component = SignalComponent(2, 1, 0)
         self.file_path = None
-        self.complete_linspace_start = -70
-        self.complete_linspace_stop = 75
+        self.complete_linspace_start = -10
+        self.complete_linspace_stop = 15
         self.complete_linspace_len = (self.complete_linspace_stop - self.complete_linspace_start) * 2_000
         self.sampling_origin_linspace = np.linspace(self.complete_linspace_start,
                                                     self.complete_linspace_stop,

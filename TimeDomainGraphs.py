@@ -1,5 +1,6 @@
 from PySide6 import QtCore
 import pyqtgraph as pg
+import numpy as np
 
 
 class TimeDomainGraphs:
@@ -57,6 +58,14 @@ class TimeDomainGraphs:
         self.difference_plot_legend.clear()
         original_signal = pg.PlotDataItem(linspace, signal_data1, pen=self.original_pen)
         reconstructed_signal = pg.PlotDataItem(linspace, signal_data2, pen=self.reconstruction_pen)
+
+        root_mean_squared_error = np.sqrt(np.mean(difference ** 2))
+        rmse_text = f"RMSE: {root_mean_squared_error:.4f}"
+        rmse_text_item = pg.TextItem(rmse_text, color=(200, 50, 50), anchor=(0, 1))
+        rmse_text_item.setPos(linspace[0], np.mean(difference))
+
+        self.difference_plot.addItem(rmse_text_item)
+
         difference = pg.PlotDataItem(linspace, difference, pen=self.difference_pen)
 
         # self.difference_plot.addItem(original_signal)
@@ -65,4 +74,3 @@ class TimeDomainGraphs:
         # self.difference_plot_legend.addItem(original_signal, "Original Signal")
         # self.difference_plot_legend.addItem(reconstructed_signal, "Reconstructed Signal")
         self.difference_plot_legend.addItem(difference, "Difference")
-

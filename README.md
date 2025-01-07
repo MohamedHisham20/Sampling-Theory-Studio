@@ -12,7 +12,7 @@ Sampling Theory Studio is a Python application that allows users to reconstruct 
 - **Save and Load Scenarios**: Save the whole setup of the app and load it with all its components where you left off
 
 ## Working Application
-![Working App](images/app.gif)
+https://github.com/user-attachments/assets/3e5dc4ad-36b4-4f38-8d8a-d10c11639e5c
 
 ## Screenshots
 

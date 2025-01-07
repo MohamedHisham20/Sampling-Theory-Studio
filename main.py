@@ -338,7 +338,7 @@ class SamplingStudio(QMainWindow):
         # self.time_domain_graphs.draw_reconstruction(complete_linspace, reconstruction_data)
 
         # Difference plot
-        self.time_domain_graphs.draw_difference(self.plotting_linspace, data_points, reconstruction_to_plot, self.sampling_freq_spinBox.value(),self.noise_checkbox.isChecked(), self.freq_slider.value())
+        self.time_domain_graphs.draw_difference(self.plotting_linspace, data_points, reconstruction_to_plot)
         # self.time_domain_graphs.draw_difference(complete_linspace, data_points, reconstruction_data)
 
         # DFT Magnitude Plot

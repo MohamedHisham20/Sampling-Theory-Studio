@@ -9,6 +9,10 @@ Sampling Theory Studio is a Python application that allows users to reconstruct 
 - **Signal Composer**: Generate custom signals with desired frequency, amplitude, and phase.
 - **Noise Addition**: Add noise to the signal and adjust the Signal-to-Noise Ratio (SNR).
 - **Visualization**: Visualize the original signal, reconstructed signal, and the difference between them.
+- **Save and Load Scenarios**: Save the whole setup of the app and load it with all its components where you left off
+
+## Working Application
+![Working App](images/app.gif)
 
 ## Screenshots
 

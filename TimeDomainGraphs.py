@@ -68,9 +68,8 @@ class TimeDomainGraphs:
 
         difference = pg.PlotDataItem(linspace, difference, pen=self.difference_pen)
 
-        # self.difference_plot.addItem(original_signal)
-        # self.difference_plot.addItem(reconstructed_signal)
         self.difference_plot.addItem(difference)
-        # self.difference_plot_legend.addItem(original_signal, "Original Signal")
-        # self.difference_plot_legend.addItem(reconstructed_signal, "Reconstructed Signal")
         self.difference_plot_legend.addItem(difference, "Difference")
+
+        # Set y-axis range from -1 to 1
+        self.difference_plot.setYRange(-2, 2)
